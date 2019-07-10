@@ -178,10 +178,10 @@ else
   cpanm Sys::CpuAffinity
   cpanm threads::shared
 fi
-cpanm DateTime::Format::Excel
-cpanm Dancer::Plugin::I18N
-cpanm Spreadsheet::Reader::Format
-cpanm Spreadsheet::Reader::ExcelXML
+cpanm --notest Dancer::Plugin::I18N
+cpanm --notest DateTime::Format::Excel
+cpanm --notest Spreadsheet::Reader::Format
+cpanm --notest Spreadsheet::Reader::ExcelXML
 #wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /usr/lib/x86_64-linux-gnu/perl5/5.24/bulk-processor.tar.gz
 #tar -zxvf /usr/lib/x86_64-linux-gnu/perl5/5.24/bulk-processor.tar.gz -C /usr/lib/x86_64-linux-gnu/perl5/5.24 --strip-components 1
 #chmod 755 /usr/lib/x86_64-linux-gnu/perl5/5.24/CTSMS -R
