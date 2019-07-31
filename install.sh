@@ -89,8 +89,8 @@ apt-get -y install apache2 libapache2-mod-jk libapache2-mod-fcgid
 usermod --append --groups tomcat8,ctsms www-data
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_https.conf -O /etc/apache2/sites-available/01_signup_https.conf
+#wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
+#wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_https.conf -O /etc/apache2/sites-available/01_signup_https.conf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/ports.conf -O /etc/apache2/ports.conf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/blocklist.conf -O /etc/apache2/blocklist.conf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/jk.conf -O /etc/apache2/mods-available/jk.conf
@@ -106,6 +106,14 @@ HOST_NAME=$(hostname)
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -subj "/C=AT/ST=Austria/L=Graz/O=phoenix/CN=$HOST_NAME" -out /etc/apache2/ssl/apache.crt
 chmod 600 /etc/apache2/ssl/*
 systemctl reload apache2
+
+###install memcached
+apt-get -y install memcached
+mkdir /var/run/memcached
+chmod 777 /var/run/memcached
+sed -r -i 's/-p 11211/#-p 11211/' /etc/memcached.conf
+sed -r -i 's/-l 127\.0\.0\.1/-s \/var\/run\/memcached\/memcached.sock -a 0666/' /etc/memcached.conf
+systemctl restart memcached
 
 ###install bulk-processor
 apt-get -y install \
@@ -161,7 +169,6 @@ libdancer-perl \
 libdbd-pg-perl \
 libjson-perl \
 libplack-perl \
-memcached \
 libcache-memcached-perl \
 libdancer-session-memcached-perl \
 libgraphviz-perl \
@@ -189,6 +196,7 @@ cpanm --notest Spreadsheet::Reader::ExcelXML
 #rm /usr/lib/x86_64-linux-gnu/perl5/5.24//bulk-processor.tar.gz -f
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
+perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 mkdir /ctsms/bulk_processor/output
 chown ctsms:ctsms /ctsms/bulk_processor -R
 chmod 755 /ctsms/bulk_processor -R
