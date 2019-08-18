@@ -33,9 +33,9 @@ apt-get -y install openjdk-8-jdk
 apt-get -y install libservlet3.1-java tomcat8
 systemctl stop tomcat8
 usermod --append --groups tomcat8,adm ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/workers.properties -O /etc/tomcat8/workers.properties
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/workers.properties -O /etc/tomcat8/workers.properties
 chown root:tomcat8 /etc/tomcat8/workers.properties
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/server.xml -O /etc/tomcat8/server.xml
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/server.xml -O /etc/tomcat8/server.xml
 chown root:tomcat8 /etc/tomcat8/server.xml
 chmod 640 /etc/tomcat8/workers.properties
 chmod 770 /var/log/tomcat8
@@ -87,13 +87,13 @@ cp /ctsms/build/ctsms/web/target/ctsms-1.6.2.war /var/lib/tomcat8/webapps/ROOT.w
 apt-get -y install apache2 libapache2-mod-jk libapache2-mod-fcgid
 #usermod --append --groups ctsms www-data
 usermod --append --groups tomcat8,ctsms www-data
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
 #wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
 #wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_https.conf -O /etc/apache2/sites-available/01_signup_https.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/ports.conf -O /etc/apache2/ports.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/blocklist.conf -O /etc/apache2/blocklist.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/jk.conf -O /etc/apache2/mods-available/jk.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/ports.conf -O /etc/apache2/ports.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/blocklist.conf -O /etc/apache2/blocklist.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/jk.conf -O /etc/apache2/mods-available/jk.conf
 a2dissite 000-default.conf
 a2ensite 00_ctsms_https.conf
 a2ensite 00_ctsms_http.conf
@@ -256,10 +256,10 @@ sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_proc
 sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup/settings.yml
 
 ###setup cron
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/ctsms -O /etc/cron.d/ctsms
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/cron/ctsms -O /etc/cron.d/ctsms
 chown root:root /etc/cron.d/ctsms
 chmod 644 /etc/cron.d/ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/my_department -O /etc/cron.d/my_department
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/cron/my_department -O /etc/cron.d/my_department
 chown root:root /etc/cron.d/my_department
 chmod 644 /etc/cron.d/my_department
 sed -r -i "s|-u cron -p 12345|-u my_department_cron -p ${CRON_PASSWORD}|" /etc/cron.d/my_department
