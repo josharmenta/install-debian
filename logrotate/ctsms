@@ -1,0 +1,8 @@
+/ctsms/dbtool.log {
+su ctsms ctsms
+copytruncate
+daily
+rotate 7
+missingok
+size 5M
+}

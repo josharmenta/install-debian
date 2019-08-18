@@ -265,6 +265,11 @@ chmod 644 /etc/cron.d/my_department
 sed -r -i "s|-u cron -p 12345|-u my_department_cron -p ${CRON_PASSWORD}|" /etc/cron.d/my_department
 systemctl restart cron
 
+###setup logrotate
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/logrotate/ctsms -O /etc/logrotate.d/ctsms
+chown root:root /etc/logrotate.d/ctsms
+chmod 644 /etc/logrotate.d/ctsms
+
 ###create some default queries/reports
 cd /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/Criteria
 perl process.pl --task=create_criteria --force --skip-errors
