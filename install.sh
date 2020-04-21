@@ -7,7 +7,7 @@ fi
 #apt-get -y install open-vm-tools
 #apt-get -y install net-tools
 #apt-get -y install mc
-apt-get -y install sudo wget lsb-release gnupg
+apt-get -y install sudo wget curl lsb-release gnupg
 
 ###create 'ctsms' user
 useradd ctsms -p '*' --groups sudo
@@ -17,6 +17,9 @@ mkdir /ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/clearcache.sh -O /ctsms/clearcache.sh
+chown ctsms:ctsms /ctsms/clearcache.sh
+chmod 755 /ctsms/clearcache.sh
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
 tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
 rm /ctsms/config.tar.gz -f
