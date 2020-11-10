@@ -83,9 +83,9 @@ sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
 #systemctl restart postgresql
 
 ###deploy ctsms-web.war
-chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.6.9.war
+chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.7.0.war
 rm /var/lib/tomcat8/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.6.9.war /var/lib/tomcat8/webapps/ROOT.war
+cp /ctsms/build/ctsms/web/target/ctsms-1.7.0.war /var/lib/tomcat8/webapps/ROOT.war
 
 ###setup apache2
 apt-get -y install apache2 libapache2-mod-jk libapache2-mod-fcgid
@@ -283,10 +283,10 @@ cd /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/Render
 ./render.sh
 cd /ctsms/build/ctsms
 mvn -f web/pom.xml -Dmaven.test.skip=true
-chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.6.9.war
+chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.7.0.war
 systemctl stop tomcat8
 rm /var/lib/tomcat8/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.6.9.war /var/lib/tomcat8/webapps/ROOT.war
+cp /ctsms/build/ctsms/web/target/ctsms-1.7.0.war /var/lib/tomcat8/webapps/ROOT.war
 
 ###ready
 systemctl start tomcat8
