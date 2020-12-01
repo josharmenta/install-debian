@@ -23,9 +23,8 @@ chmod 755 /ctsms/clearcache.sh
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
 tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
 rm /ctsms/config.tar.gz -f
-sleep 60
-wget --no-check-certificate --content-disposition https://github.com/phoenixctms/master-data/archive/master.tar.gz -O /ctsms/master-data.tar.gz
-#wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
+#wget --no-check-certificate --content-disposition https://github.com/phoenixctms/master-data/archive/master.tar.gz -O /ctsms/master-data.tar.gz
+wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
