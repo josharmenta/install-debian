@@ -47,7 +47,7 @@ chmod g+w /var/log/tomcat8/*
 chmod 775 /var/lib/tomcat8/webapps
 sed -r -i 's/TOMCAT8_USER.+/TOMCAT8_USER=ctsms/' /etc/default/tomcat8
 sed -r -i 's/TOMCAT8_GROUP.+/TOMCAT8_GROUP=ctsms/' /etc/default/tomcat8
-sed -r -i 's/^JAVA_OPTS.+/JAVA_OPTS="-server -Djava.awt.headless=true -Xms2048m -Xmx4096m -Xss256k -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=256m"/' /etc/default/tomcat8
+sed -r -i 's/^JAVA_OPTS.+/JAVA_OPTS="-server -Djava.awt.headless=true -Xms2048m -Xmx4096m -Xss512k -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=256m"/' /etc/default/tomcat8
 echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat8
 echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat8
 systemctl start tomcat8
