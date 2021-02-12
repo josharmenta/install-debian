@@ -176,6 +176,7 @@ libyaml-tiny-perl \
 libtemplate-perl \
 libdancer-perl \
 libdbd-pg-perl \
+libredis-perl \
 libjson-perl \
 libplack-perl \
 libcache-memcached-perl \
