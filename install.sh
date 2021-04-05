@@ -141,6 +141,8 @@ libdatetime-timezone-perl \
 libdbd-csv-perl \
 libdbd-mysql-perl \
 libdbd-sqlite3-perl \
+tdsodbc \
+libdbd-odbc-perl \
 libdigest-md5-perl \
 libemail-mime-attachment-stripper-perl \
 libemail-mime-perl \
