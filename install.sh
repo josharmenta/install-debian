@@ -68,13 +68,8 @@ fi
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
-###install postgres 9.5
-if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
-  wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/pgdg.list -O /etc/apt/sources.list.d/pgdg.list
-  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-  apt-get update
-fi
-apt-get -y install postgresql-9.5
+###install postgres 9.6
+apt-get -y install postgresql-9.6
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
