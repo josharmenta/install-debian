@@ -63,7 +63,9 @@ git clone https://github.com/phoenixctms/ctsms
 #sed -r -i 's/<java\.home>.+<\/java\.home>/<java.home>\/usr\/lib\/jvm\/java-8-openjdk-amd64<\/java.home>/' /ctsms/build/ctsms/pom.xml
 #sed -r -i 's/<stagingDirectory>.+<\/stagingDirectory>/<stagingDirectory>\/ctsms\/build\/ctsms\/target\/site<\/stagingDirectory>/' /ctsms/build/ctsms/pom.xml
 cd /ctsms/build/ctsms
-git checkout tags/$TAG -b $TAG
+if [ "$TAG" != "master" ]; then
+  git checkout tags/$TAG -b $TAG
+fi
 mvn install -DskipTests
 if [ ! -f /ctsms/build/ctsms/web/target/ctsms-$VERSION.war]; then
   # maybe we have more luck with dependency download on a 2nd try:
