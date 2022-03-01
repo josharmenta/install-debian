@@ -30,27 +30,27 @@ tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 
-###install OpenJDK 8
-apt-get -y install openjdk-8-jdk
+###install OpenJDK 11
+apt-get -y install default-jdk
 
-###install tomcat8
-apt-get -y install libservlet3.1-java tomcat8
-systemctl stop tomcat8
-usermod --append --groups tomcat8,adm ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/workers.properties -O /etc/tomcat8/workers.properties
-chown root:tomcat8 /etc/tomcat8/workers.properties
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/server.xml -O /etc/tomcat8/server.xml
-chown root:tomcat8 /etc/tomcat8/server.xml
-chmod 640 /etc/tomcat8/workers.properties
-chmod 770 /var/log/tomcat8
-chmod g+w /var/log/tomcat8/*
-chmod 775 /var/lib/tomcat8/webapps
-sed -r -i 's/TOMCAT8_USER.+/TOMCAT8_USER=ctsms/' /etc/default/tomcat8
-sed -r -i 's/TOMCAT8_GROUP.+/TOMCAT8_GROUP=ctsms/' /etc/default/tomcat8
-sed -r -i 's/^JAVA_OPTS.+/JAVA_OPTS="-server -Djava.awt.headless=true -Xms2048m -Xmx4096m -Xss512k -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=256m"/' /etc/default/tomcat8
-echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat8
-echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat8
-systemctl start tomcat8
+###install tomcat9
+apt-get -y install libservlet3.1-java tomcat9
+systemctl stop tomcat9
+usermod --append --groups tomcat,adm ctsms
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/workers.properties -O /etc/tomcat9/workers.properties
+chown root:tomcat /etc/tomcat9/workers.properties
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/server.xml -O /etc/tomcat9/server.xml
+chown root:tomcat /etc/tomcat9/server.xml
+chmod 640 /etc/tomcat9/workers.properties
+chmod 770 /var/log/tomcat9
+chmod g+w /var/log/tomcat9/*
+chmod 775 /var/lib/tomcat9/webapps
+#sed -r -i 's/TOMCAT8_USER.+/TOMCAT8_USER=ctsms/' /etc/default/tomcat8
+#sed -r -i 's/TOMCAT8_GROUP.+/TOMCAT8_GROUP=ctsms/' /etc/default/tomcat8
+sed -r -i 's/^JAVA_OPTS.+/JAVA_OPTS="-server -Djava.awt.headless=true -Xms2048m -Xmx4096m -Xss512k -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=256m"/' /etc/default/tomcat9
+echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat9
+echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat9
+systemctl start tomcat9
 
 ####build phoenix
 apt-get -y install git maven
@@ -68,8 +68,8 @@ fi
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
-###install postgres 9.6
-apt-get -y install postgresql-9.6
+###install postgres 13
+apt-get -y install postgresql
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
@@ -78,19 +78,19 @@ sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
 
 ###enable ssh and database remote access
 #apt-get -y install ssh
-#sed -r -i "s|#*listen_addresses.*|listen_addresses = '*'|" /etc/postgresql/9.5/main/postgresql.conf
-#echo -e "host\tall\tall\t0.0.0.0/0\tmd5\nhost\tall\tall\t::/0\tmd5" >> /etc/postgresql/9.5/main/pg_hba.conf
+#sed -r -i "s|#*listen_addresses.*|listen_addresses = '*'|" /etc/postgresql/13/main/postgresql.conf
+#echo -e "host\tall\tall\t0.0.0.0/0\tmd5\nhost\tall\tall\t::/0\tmd5" >> /etc/postgresql/13/main/pg_hba.conf
 #systemctl restart postgresql
 
 ###deploy ctsms-web.war
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.8.0.war
-rm /var/lib/tomcat8/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat8/webapps/ROOT.war
+rm /var/lib/tomcat9/webapps/ROOT/ -rf
+cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###setup apache2
 apt-get -y install apache2 libapache2-mod-jk libapache2-mod-fcgid
 #usermod --append --groups ctsms www-data
-usermod --append --groups tomcat8,ctsms www-data
+usermod --append --groups tomcat,ctsms www-data
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
 #wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
@@ -113,7 +113,7 @@ systemctl reload apache2
 
 ###install memcached
 apt-get -y install memcached
-mkdir /var/run/memcached
+#mkdir /var/run/memcached
 chmod 777 /var/run/memcached
 sed -r -i 's/-p 11211/#-p 11211/' /etc/memcached.conf
 sed -r -i 's/-l 127\.0\.0\.1/-s \/var\/run\/memcached\/memcached.sock -a 0666/' /etc/memcached.conf
@@ -293,12 +293,12 @@ cd /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/Render
 cd /ctsms/build/ctsms
 mvn -f web/pom.xml -Dmaven.test.skip=true
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.8.0.war
-systemctl stop tomcat8
-rm /var/lib/tomcat8/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat8/webapps/ROOT.war
+systemctl stop tomcat9
+rm /var/lib/tomcat9/webapps/ROOT/ -rf
+cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###ready
-systemctl start tomcat8
+systemctl start tomcat9
 echo "Phoenix CTMS is starting..."
 echo "The department passphrase for 'my_department' when adding users with /ctsms/dbtool.sh is '$DEPARTMENT_PASSWORD'."
 echo "Log in at https://$IP with username 'phoenix' password '$USER_PASSWORD'."
