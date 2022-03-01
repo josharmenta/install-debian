@@ -3,6 +3,9 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+TAG=master
+VERSION=1.8.0
+
 ###install some general packages:
 #apt-get -y install open-vm-tools
 #apt-get -y install net-tools
@@ -14,17 +17,17 @@ useradd ctsms -p '*' --groups sudo
 
 ###prepare /ctsms directory with default-config and master-data
 mkdir /ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/dbtool.sh -O /ctsms/dbtool.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/clearcache.sh -O /ctsms/clearcache.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh -O /ctsms/clearcache.sh
 chown ctsms:ctsms /ctsms/clearcache.sh
 chmod 755 /ctsms/clearcache.sh
-wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
+wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
 tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
 rm /ctsms/config.tar.gz -f
-#wget --no-check-certificate --content-disposition https://github.com/phoenixctms/master-data/archive/master.tar.gz -O /ctsms/master-data.tar.gz
-wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
+#wget --no-check-certificate --content-disposition https://github.com/phoenixctms/master-data/archive/$TAG.tar.gz -O /ctsms/master-data.tar.gz
+wget https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
@@ -37,9 +40,9 @@ apt-get -y install default-jdk
 apt-get -y install libservlet3.1-java tomcat9
 systemctl stop tomcat9
 usermod --append --groups tomcat,adm ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/workers.properties -O /etc/tomcat9/workers.properties
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/workers.properties -O /etc/tomcat9/workers.properties
 chown root:tomcat /etc/tomcat9/workers.properties
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/tomcat/server.xml -O /etc/tomcat9/server.xml
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
 chown root:tomcat /etc/tomcat9/server.xml
 chmod 640 /etc/tomcat9/workers.properties
 chmod 770 /var/log/tomcat9
@@ -60,8 +63,9 @@ git clone https://github.com/phoenixctms/ctsms
 #sed -r -i 's/<java\.home>.+<\/java\.home>/<java.home>\/usr\/lib\/jvm\/java-8-openjdk-amd64<\/java.home>/' /ctsms/build/ctsms/pom.xml
 #sed -r -i 's/<stagingDirectory>.+<\/stagingDirectory>/<stagingDirectory>\/ctsms\/build\/ctsms\/target\/site<\/stagingDirectory>/' /ctsms/build/ctsms/pom.xml
 cd /ctsms/build/ctsms
+git checkout tags/$TAG -b $TAG
 mvn install -DskipTests
-if [ ! -f /ctsms/build/ctsms/web/target/ctsms-1.8.0.war]; then
+if [ ! -f /ctsms/build/ctsms/web/target/ctsms-$VERSION.war]; then
   # maybe we have more luck with dependency download on a 2nd try:
   mvn install -DskipTests
 fi
@@ -83,21 +87,21 @@ sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
 #systemctl restart postgresql
 
 ###deploy ctsms-web.war
-chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.8.0.war
+chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat9/webapps/ROOT.war
+cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###setup apache2
 apt-get -y install apache2 libapache2-mod-jk libapache2-mod-fcgid
 #usermod --append --groups ctsms www-data
 usermod --append --groups tomcat,ctsms www-data
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
-#wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
-#wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/01_signup_https.conf -O /etc/apache2/sites-available/01_signup_https.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/ports.conf -O /etc/apache2/ports.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/blocklist.conf -O /etc/apache2/blocklist.conf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/apache/jk.conf -O /etc/apache2/mods-available/jk.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/apache/00_ctsms_http.conf -O /etc/apache2/sites-available/00_ctsms_http.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/apache/00_ctsms_https.conf -O /etc/apache2/sites-available/00_ctsms_https.conf
+#wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/01_signup_http.conf -O /etc/apache2/sites-available/01_signup_http.conf
+#wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/01_signup_https.conf -O /etc/apache2/sites-available/01_signup_https.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/apache/ports.conf -O /etc/apache2/ports.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/apache/blocklist.conf -O /etc/apache2/blocklist.conf
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/apache/jk.conf -O /etc/apache2/mods-available/jk.conf
 a2dissite 000-default.conf
 a2ensite 00_ctsms_https.conf
 a2ensite 00_ctsms_http.conf
@@ -196,12 +200,12 @@ cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
 cpanm --notest Spreadsheet::Reader::ExcelXML
-#wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /usr/lib/x86_64-linux-gnu/perl5/5.24/bulk-processor.tar.gz
+#wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /usr/lib/x86_64-linux-gnu/perl5/5.24/bulk-processor.tar.gz
 #tar -zxvf /usr/lib/x86_64-linux-gnu/perl5/5.24/bulk-processor.tar.gz -C /usr/lib/x86_64-linux-gnu/perl5/5.24 --strip-components 1
 #chmod 755 /usr/lib/x86_64-linux-gnu/perl5/5.24/CTSMS -R
 #chmod 755 /usr/lib/x86_64-linux-gnu/perl5/5.24/Excel -R
 #rm /usr/lib/x86_64-linux-gnu/perl5/5.24//bulk-processor.tar.gz -f
-wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz
+wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 mkdir /ctsms/bulk_processor/output
@@ -209,13 +213,13 @@ chown ctsms:ctsms /ctsms/bulk_processor -R
 chmod 755 /ctsms/bulk_processor -R
 chmod 777 /ctsms/bulk_processor/output -R
 rm /ctsms/bulk-processor.tar.gz -f
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
 chown ctsms:ctsms /ctsms/ecrfdataexport.sh
 chmod 755 /ctsms/ecrfdataexport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
 chown ctsms:ctsms /ctsms/ecrfdataimport.sh
 chmod 755 /ctsms/ecrfdataimport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
 
@@ -269,17 +273,17 @@ sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_proc
 sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup/settings.yml
 
 ###setup cron
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/cron/ctsms -O /etc/cron.d/ctsms
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/cron/ctsms -O /etc/cron.d/ctsms
 chown root:root /etc/cron.d/ctsms
 chmod 644 /etc/cron.d/ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/cron/my_department -O /etc/cron.d/my_department
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/cron/my_department -O /etc/cron.d/my_department
 chown root:root /etc/cron.d/my_department
 chmod 644 /etc/cron.d/my_department
 sed -r -i "s|-u cron -p 12345|-u my_department_cron -p ${CRON_PASSWORD}|" /etc/cron.d/my_department
 systemctl restart cron
 
 ###setup logrotate
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/logrotate/ctsms -O /etc/logrotate.d/ctsms
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/logrotate/ctsms -O /etc/logrotate.d/ctsms
 chown root:root /etc/logrotate.d/ctsms
 chmod 644 /etc/logrotate.d/ctsms
 
@@ -292,10 +296,10 @@ cd /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/Render
 ./render.sh
 cd /ctsms/build/ctsms
 mvn -f web/pom.xml -Dmaven.test.skip=true
-chmod 755 /ctsms/build/ctsms/web/target/ctsms-1.8.0.war
+chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 systemctl stop tomcat9
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-1.8.0.war /var/lib/tomcat9/webapps/ROOT.war
+cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###ready
 systemctl start tomcat9
