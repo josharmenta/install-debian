@@ -24,6 +24,7 @@ useradd ctsms
 # -p '*' --groups sudo
 
 ###prepare /ctsms directory with default-config and master-data
+rm /ctsms/ -rf
 mkdir /ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
@@ -53,8 +54,10 @@ apt-get -y install default-jdk
 ###install tomcat9
 apt-get -y install libservlet3.1-java tomcat9
 systemctl stop tomcat9
-#usermod --append --groups tomcat,adm ctsms
+#allow tomcat writing to /ctsms/external_files:
 usermod --append --groups ctsms tomcat
+#allow ctsms user to load jars from exploded .war:
+usermod --append --groups tomcat,adm ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/workers.properties -O /etc/tomcat9/workers.properties
 chown root:tomcat /etc/tomcat9/workers.properties
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
@@ -66,7 +69,7 @@ chmod 775 /var/lib/tomcat9/webapps
 sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat9
 echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat9
-sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat9\\n# Lifecycle|" /usr/lib/systemd/system/tomcat9.service
+sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat9\\n\\n# Lifecycle|" /usr/lib/systemd/system/tomcat9.service
 sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/|" /usr/lib/systemd/system/tomcat9.service
 systemctl daemon-reload
 systemctl start tomcat9
@@ -108,12 +111,8 @@ chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
-###setup apache2
-/ctsms/install/install_apache.sh
-
 ###install memcached
 apt-get -y install memcached
-mkdir /var/run/memcached
 chmod 777 /var/run/memcached
 sed -r -i 's/-p 11211/#-p 11211/' /etc/memcached.conf
 sed -r -i 's/-l 127\.0\.0\.1/-s \/var\/run\/memcached\/memcached.sock -a 0666/' /etc/memcached.conf
@@ -214,10 +213,18 @@ wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquiryda
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
 
-###initialize phoenix
+###setup apache2
+chmod +rwx /ctsms/install/install_apache.sh
+export TAG
+/ctsms/install/install_apache.sh
+
+###initialize database
+#sudo -u ctsms /ctsms/dbtool.sh -sn
+chmod +rwx /ctsms/install/init_database.sh
 /ctsms/install/init_database.sh
 
 ###setup cron
+chmod +rwx /ctsms/install/install_cron.sh
 /ctsms/install/install_cron.sh
 
 ###setup logrotate
@@ -236,6 +243,7 @@ rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###ready
+#rm /ctsms/install/ -rf
+#rm /ctsms/build/ -rf
 systemctl start tomcat9
-echo "Phoenix CTMS $VERSION is starting..."
-
+echo "Phoenix CTMS $VERSION installation finished."
