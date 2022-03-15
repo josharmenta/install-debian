@@ -24,7 +24,6 @@ useradd ctsms
 # -p '*' --groups sudo
 
 ###prepare /ctsms directory with default-config and master-data
-rm /ctsms/ -rf
 mkdir /ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
@@ -47,6 +46,7 @@ mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
+chmod 775 /ctsms/external_files -R
 
 ###install OpenJDK 11
 apt-get -y install default-jdk
@@ -76,6 +76,7 @@ systemctl start tomcat9
 
 ####build phoenix
 apt-get -y install git maven
+rm /ctsms/build/ -rf
 mkdir /ctsms/build
 cd /ctsms/build
 git clone https://github.com/phoenixctms/ctsms
@@ -185,6 +186,7 @@ build-essential \
 libtest-utf8-perl \
 libmoosex-hasdefaults-perl \
 cpanminus
+sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
 if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
   apt-get -y install libsys-cpuaffinity-perl
 else
@@ -195,6 +197,7 @@ cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
 cpanm --notest Spreadsheet::Reader::ExcelXML
+rm /ctsms/bulk_processor/ -rf
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
@@ -243,7 +246,5 @@ rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###ready
-#rm /ctsms/install/ -rf
-#rm /ctsms/build/ -rf
 systemctl start tomcat9
 echo "Phoenix CTMS $VERSION installation finished."
