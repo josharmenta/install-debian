@@ -12,12 +12,18 @@ XMX=4096m
 XSS=512k
 PERM=256m
 
+
+
 ###install some general packages:
 apt-get update
 #apt-get -y install open-vm-tools
 #apt-get -y install net-tools
 #apt-get -y install mc
 apt-get -y install sudo wget curl lsb-release gnupg
+
+###sync time
+apt-get -y install ntp
+ntpd -q -g
 
 ###create 'ctsms' user
 useradd ctsms
