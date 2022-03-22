@@ -29,6 +29,7 @@ useradd ctsms
 
 ###prepare /ctsms directory with default-config and master-data
 mkdir /ctsms
+rm /ctsms/bulk_processor/ -rf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
@@ -201,7 +202,6 @@ cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
 cpanm --notest Spreadsheet::Reader::ExcelXML
-rm /ctsms/bulk_processor/ -rf
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
