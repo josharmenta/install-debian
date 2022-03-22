@@ -12,8 +12,6 @@ XMX=4096m
 XSS=512k
 PERM=256m
 
-
-
 ###install some general packages:
 apt-get update
 #apt-get -y install open-vm-tools
@@ -254,3 +252,4 @@ cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROO
 ###ready
 systemctl start tomcat9
 echo "Phoenix CTMS $VERSION installation finished."
+grep 'Log in' /home/phoenix/install.log
