@@ -16,7 +16,7 @@ PERM=256m
 apt-get update
 #apt-get -y install open-vm-tools
 #apt-get -y install net-tools
-#apt-get -y install mc
+#apt-get -y install mc htop pg_activity
 apt-get -y install sudo wget curl lsb-release gnupg
 
 ###sync time
@@ -105,6 +105,8 @@ sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
+sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/13/main/postgresql.conf
+systemctl restart postgresql
 
 ###enable ssh and database remote access
 #apt-get -y install ssh
