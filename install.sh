@@ -65,8 +65,8 @@ usermod --append --groups ctsms tomcat
 usermod --append --groups tomcat,adm ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/workers.properties -O /etc/tomcat9/workers.properties
 chown root:tomcat /etc/tomcat9/workers.properties
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
-chown root:tomcat /etc/tomcat9/server.xml
+#wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
+#chown root:tomcat /etc/tomcat9/server.xml
 chmod 640 /etc/tomcat9/workers.properties
 chmod 770 /var/log/tomcat9
 chmod g+w /var/log/tomcat9/*
