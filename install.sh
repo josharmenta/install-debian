@@ -47,11 +47,15 @@ if [ -f /ctsms/install/environment ]; then
   source /ctsms/install/environment
 fi
 wget https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
+rm /ctsms/master_data -rf
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 chmod 775 /ctsms/external_files -R
+
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
+chmod 744 /ctsms/update.sh
 
 ###install OpenJDK 11
 apt-get -y install default-jdk
