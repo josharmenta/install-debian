@@ -7,6 +7,16 @@ TAG=master
 CONFIG_REPO=
 TOKEN=
 
+if [[ "$1" != "" ]]; then
+    TAG="$1"
+fi
+if [[ "$2" != "" ]]; then
+    CONFIG_REPO="$2"
+fi
+if [[ "$3" != "" ]]; then
+    TOKEN="$3"
+fi
+
 XMS=2048m
 XMX=4096m
 XSS=512k
