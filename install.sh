@@ -65,7 +65,7 @@ rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 chmod 775 /ctsms/external_files -R
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
-chmod 744 /ctsms/update.sh
+chmod 755 /ctsms/update.sh
 
 ###install OpenJDK 11
 apt-get -y install default-jdk
@@ -117,6 +117,7 @@ apt-get -y install postgresql
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
+sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-set-version.sql

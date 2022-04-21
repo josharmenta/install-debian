@@ -49,7 +49,7 @@ tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
-chmod 744 /ctsms/update.sh
+chmod 755 /ctsms/update.sh
 mv /tmp/external_files /ctsms/external_files
 
 ###build phoenix
