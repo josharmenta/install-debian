@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -48,8 +50,8 @@ mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
-chmod 755 /ctsms/update.sh
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
+chmod 755 /ctsms/update
 mv /tmp/external_files /ctsms/external_files
 
 ###build phoenix
