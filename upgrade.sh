@@ -7,6 +7,7 @@ TAG=master
 CONFIG_REPO=
 TOKEN=
 
+###read args
 if [[ "$1" != "" ]]; then
     TAG="$1"
 fi
@@ -17,15 +18,15 @@ if [[ "$3" != "" ]]; then
     TOKEN="$3"
 fi
 
+###stop services
 systemctl stop cron
 systemctl stop apache2
 systemctl stop tomcat9
 
-###prepare /ctsms directory with default-config and master-data
-mv /ctsms/external_files /tmp
+###re-create /ctsms directory with default-config and master-data
+mv /ctsms/external_files /tmp/external_files
 rm /ctsms/ -rf
 mkdir /ctsms
-rm /ctsms/bulk_processor/ -rf
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
@@ -43,19 +44,15 @@ if [ -f /ctsms/install/environment ]; then
   source /ctsms/install/environment
 fi
 wget https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
-rm /ctsms/master_data -rf
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
-chmod 775 /ctsms/external_files -R
-
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
 chmod 744 /ctsms/update.sh
+mv /tmp/external_files /ctsms/external_files
 
-mv /tmp/external_files /ctsms/
-
-rm /ctsms/build/ -rf
+###build phoenix
 mkdir /ctsms/build
 cd /ctsms/build
 git clone https://github.com/phoenixctms/ctsms
@@ -72,20 +69,20 @@ fi
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
-### execute .sql
+###apply database changes
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-up-$TAG.sql
 
+###deploy .war
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 systemctl start tomcat9
 
-
-
+###update permissions and criterions
 sudo -u ctsms /ctsms/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
 sudo -u ctsms /ctsms/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv
 
-
+###update bulk-processor
 wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
@@ -104,6 +101,7 @@ wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquiryda
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
 
+###render workflow state diagram images from db and include them for tooltips
 cd /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/Render
 ./render.sh
 cd /ctsms/build/ctsms

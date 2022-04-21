@@ -7,6 +7,7 @@ TAG=master
 CONFIG_REPO=
 TOKEN=
 
+###read args
 if [[ "$1" != "" ]]; then
     TAG="$1"
 fi
@@ -22,7 +23,7 @@ XMX=4096m
 XSS=512k
 PERM=256m
 
-###install some general packages:
+###install some general packages
 apt-get update
 #apt-get -y install open-vm-tools
 #apt-get -y install net-tools
@@ -63,7 +64,6 @@ tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 chmod 775 /ctsms/external_files -R
-
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update.sh -O /ctsms/update.sh
 chmod 744 /ctsms/update.sh
 
@@ -93,7 +93,7 @@ sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/|" /us
 systemctl daemon-reload
 systemctl start tomcat9
 
-####build phoenix
+###build phoenix
 apt-get -y install git maven
 rm /ctsms/build/ -rf
 mkdir /ctsms/build
@@ -129,7 +129,7 @@ systemctl restart postgresql
 #echo -e "host\tall\tall\t0.0.0.0/0\tmd5\nhost\tall\tall\t::/0\tmd5" >> /etc/postgresql/13/main/pg_hba.conf
 #systemctl restart postgresql
 
-###deploy ctsms-web.war
+###deploy .war
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
