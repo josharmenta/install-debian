@@ -119,6 +119,7 @@ sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
+sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-set-version.sql
 sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/13/main/postgresql.conf
 systemctl restart postgresql
 
