@@ -249,6 +249,7 @@ export TAG
 #sudo -u ctsms /ctsms/dbtool.sh -sn
 chmod +rwx /ctsms/install/init_database.sh
 /ctsms/install/init_database.sh
+/ctsms/clearcache.sh
 
 ###setup cron
 chmod +rwx /ctsms/install/install_cron.sh
