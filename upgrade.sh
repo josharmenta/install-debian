@@ -26,7 +26,7 @@ systemctl stop apache2
 systemctl stop tomcat9
 
 ###re-create /ctsms directory with default-config and master-data
-mv /ctsms/external_files /tmp/external_files
+mv /ctsms/external_files /tmp/external_files/
 rm /ctsms/ -rf
 mkdir /ctsms
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
@@ -52,7 +52,8 @@ rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
 chmod 755 /ctsms/update
-mv /tmp/external_files /ctsms/external_files
+rm /ctsms/external_files/ -rf
+mv /tmp/external_files /ctsms/
 
 ###build phoenix
 mkdir /ctsms/build
