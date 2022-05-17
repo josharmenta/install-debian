@@ -72,6 +72,10 @@ fi
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
+###install or remove packages
+apt-get -y install postgresql-plperl
+sudo -u postgres psql ctsms < /ctsms/build/ctsms/core/db/dbtool.sql
+
 ###apply database changes
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-up-$TAG.sql
 
