@@ -115,11 +115,12 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
 ###install postgres 13
-apt-get -y install postgresql
+apt-get -y install postgresql postgresql-plperl
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
 sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
+sudo -u postgres psql ctsms < /ctsms/build/ctsms/core/db/dbtool.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
 sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-set-version.sql
