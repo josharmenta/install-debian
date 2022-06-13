@@ -29,28 +29,28 @@ systemctl stop tomcat9
 mv /ctsms/external_files /tmp/external_files/
 rm /ctsms/ -rf
 mkdir /ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh -O /ctsms/clearcache.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh -O /ctsms/clearcache.sh
 chown ctsms:ctsms /ctsms/clearcache.sh
 chmod 755 /ctsms/clearcache.sh
 if [ -z "$CONFIG_REPO" ] || [ -z "$TOKEN" ]; then
-  wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
+  wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
 else
-  wget --no-check-certificate --header "Authorization: token $TOKEN" --content-disposition https://github.com/$CONFIG_REPO/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
+  wget --no-verbose --no-check-certificate --header "Authorization: token $TOKEN" --content-disposition https://github.com/$CONFIG_REPO/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
 fi
 tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
 rm /ctsms/config.tar.gz -f
 if [ -f /ctsms/install/environment ]; then
   source /ctsms/install/environment
 fi
-wget https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
+wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
 chmod 755 /ctsms/update
 rm /ctsms/external_files/ -rf
 mv /tmp/external_files /ctsms/
@@ -73,7 +73,7 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
 ###install or remove packages
-apt-get -y install postgresql-plperl
+apt-get -q -y install postgresql-plperl
 sudo -u postgres psql ctsms < /ctsms/build/ctsms/core/db/dbtool.sql
 
 ###apply database changes
@@ -86,7 +86,7 @@ cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROO
 systemctl start tomcat9
 
 ###update bulk-processor
-wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
+wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 mkdir /ctsms/bulk_processor/output
@@ -94,13 +94,13 @@ chown ctsms:ctsms /ctsms/bulk_processor -R
 chmod 755 /ctsms/bulk_processor -R
 chmod 777 /ctsms/bulk_processor/output -R
 rm /ctsms/bulk-processor.tar.gz -f
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
 chown ctsms:ctsms /ctsms/ecrfdataexport.sh
 chmod 755 /ctsms/ecrfdataexport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
 chown ctsms:ctsms /ctsms/ecrfdataimport.sh
 chmod 755 /ctsms/ecrfdataimport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
 

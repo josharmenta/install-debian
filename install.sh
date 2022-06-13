@@ -26,14 +26,14 @@ XSS=512k
 PERM=256m
 
 ###install some general packages
-apt-get update
-#apt-get -y install open-vm-tools
-#apt-get -y install net-tools
-#apt-get -y install mc htop pg_activity
-apt-get -y install sudo wget curl lsb-release gnupg
+apt-get -q update
+#apt-get -q -y install open-vm-tools
+#apt-get -q -y install net-tools
+#apt-get -q -y install mc htop pg_activity
+apt-get -q -y install sudo wget curl lsb-release gnupg
 
 ###sync time
-apt-get -y install ntp
+apt-get -q -y install ntp
 ntpd -q -g
 
 ###create 'ctsms' user
@@ -43,45 +43,45 @@ useradd ctsms
 ###prepare /ctsms directory with default-config and master-data
 mkdir /ctsms
 rm /ctsms/bulk_processor/ -rf
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
 chown ctsms:ctsms /ctsms/dbtool.sh
 chmod 755 /ctsms/dbtool.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh -O /ctsms/clearcache.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh -O /ctsms/clearcache.sh
 chown ctsms:ctsms /ctsms/clearcache.sh
 chmod 755 /ctsms/clearcache.sh
 if [ -z "$CONFIG_REPO" ] || [ -z "$TOKEN" ]; then
-  wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
+  wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
 else
-  wget --no-check-certificate --header "Authorization: token $TOKEN" --content-disposition https://github.com/$CONFIG_REPO/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
+  wget --no-verbose --no-check-certificate --header "Authorization: token $TOKEN" --content-disposition https://github.com/$CONFIG_REPO/archive/$TAG.tar.gz -O /ctsms/config.tar.gz
 fi
 tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
 rm /ctsms/config.tar.gz -f
 if [ -f /ctsms/install/environment ]; then
   source /ctsms/install/environment
 fi
-wget https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
+wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
 rm /ctsms/master_data -rf
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 chmod 775 /ctsms/external_files -R
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update -O /ctsms/update
 chmod 755 /ctsms/update
 
 ###install OpenJDK 11
-apt-get -y install default-jdk
+apt-get -q -y install default-jdk
 
 ###install tomcat9
-apt-get -y install libservlet3.1-java tomcat9
+apt-get -q -y install libservlet3.1-java tomcat9
 systemctl stop tomcat9
 #allow tomcat writing to /ctsms/external_files:
 usermod --append --groups ctsms tomcat
 #allow ctsms user to load jars from exploded .war:
 usermod --append --groups tomcat,adm ctsms
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/workers.properties -O /etc/tomcat9/workers.properties
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/workers.properties -O /etc/tomcat9/workers.properties
 chown root:tomcat /etc/tomcat9/workers.properties
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/server.xml -O /etc/tomcat9/server.xml
 chown root:tomcat /etc/tomcat9/server.xml
 chmod 640 /etc/tomcat9/workers.properties
 chmod 770 /var/log/tomcat9
@@ -96,7 +96,7 @@ systemctl daemon-reload
 systemctl start tomcat9
 
 ###build phoenix
-apt-get -y install git maven
+apt-get -q -y install git maven
 rm /ctsms/build/ -rf
 mkdir /ctsms/build
 cd /ctsms/build
@@ -115,7 +115,7 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
 ###install postgres 13
-apt-get -y install postgresql postgresql-plperl
+apt-get -q -y install postgresql postgresql-plperl
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
@@ -128,7 +128,7 @@ sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/1
 systemctl restart postgresql
 
 ###enable ssh and database remote access
-#apt-get -y install ssh
+#apt-get -q -y install ssh
 #sed -r -i "s|#*listen_addresses.*|listen_addresses = '*'|" /etc/postgresql/13/main/postgresql.conf
 #echo -e "host\tall\tall\t0.0.0.0/0\tmd5\nhost\tall\tall\t::/0\tmd5" >> /etc/postgresql/13/main/pg_hba.conf
 #systemctl restart postgresql
@@ -139,14 +139,14 @@ rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###install memcached
-apt-get -y install memcached
+apt-get -q -y install memcached
 chmod 777 /var/run/memcached
 sed -r -i 's/-p 11211/#-p 11211/' /etc/memcached.conf
 sed -r -i 's/-l 127\.0\.0\.1/-s \/var\/run\/memcached\/memcached.sock -a 0666/' /etc/memcached.conf
 systemctl restart memcached
 
 ###install bulk-processor
-apt-get -y install \
+apt-get -q -y install \
 libarchive-zip-perl \
 libconfig-any-perl \
 libdata-dump-perl \
@@ -214,7 +214,7 @@ libmoosex-hasdefaults-perl \
 cpanminus
 sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
 if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
-  apt-get -y install libsys-cpuaffinity-perl
+  apt-get -q -y install libsys-cpuaffinity-perl
 else
   cpanm Sys::CpuAffinity
   cpanm threads::shared
@@ -223,7 +223,7 @@ cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
 cpanm --notest Spreadsheet::Reader::ExcelXML
-wget --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
+wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/$TAG.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 mkdir /ctsms/bulk_processor/output
@@ -231,13 +231,13 @@ chown ctsms:ctsms /ctsms/bulk_processor -R
 chmod 755 /ctsms/bulk_processor -R
 chmod 777 /ctsms/bulk_processor/output -R
 rm /ctsms/bulk-processor.tar.gz -f
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
 chown ctsms:ctsms /ctsms/ecrfdataexport.sh
 chmod 755 /ctsms/ecrfdataexport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
 chown ctsms:ctsms /ctsms/ecrfdataimport.sh
 chmod 755 /ctsms/ecrfdataimport.sh
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
 
@@ -257,7 +257,7 @@ chmod +rwx /ctsms/install/install_cron.sh
 /ctsms/install/install_cron.sh
 
 ###setup logrotate
-wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/logrotate/ctsms -O /etc/logrotate.d/ctsms
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/logrotate/ctsms -O /etc/logrotate.d/ctsms
 chown root:root /etc/logrotate.d/ctsms
 chmod 644 /etc/logrotate.d/ctsms
 
