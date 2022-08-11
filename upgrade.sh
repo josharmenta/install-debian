@@ -20,6 +20,11 @@ if [[ "$3" != "" ]]; then
     TOKEN="$3"
 fi
 
+XMS=2048m
+XMX=4096m
+XSS=512k
+PERM=256m
+
 ###stop services
 systemctl stop cron
 systemctl stop apache2
@@ -45,6 +50,11 @@ rm /ctsms/config.tar.gz -f
 if [ -f /ctsms/install/environment ]; then
   source /ctsms/install/environment
 fi
+sed -r -i "s/-Xms[^ ]+/-Xms$XMS/" /ctsms/dbtool.sh
+sed -r -i "s/-Xmx[^ ]+/-Xmx$XMX/" /ctsms/dbtool.sh
+sed -r -i "s/-Xss[^ ]+/-Xss$XSS/" /ctsms/dbtool.sh
+sed -r -i "s/-XX:ReservedCodeCacheSize=[^ ]+/-XX:ReservedCodeCacheSize=$PERM/" /ctsms/dbtool.sh
+sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG -O /ctsms/master-data.tar.gz
 mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
