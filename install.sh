@@ -26,14 +26,14 @@ XSS=512k
 PERM=256m
 
 ###install some general packages
-apt-get -q update
-#apt-get -q -y install open-vm-tools
-#apt-get -q -y install net-tools
-#apt-get -q -y install mc htop pg_activity
-apt-get -q -y install sudo wget curl lsb-release gnupg
+apt-get -q -o=Dpkg::Use-Pty=0 update
+#apt-get -q -y -o=Dpkg::Use-Pty=0 install open-vm-tools
+#apt-get -q -y -o=Dpkg::Use-Pty=0 install net-tools
+#apt-get -q -y -o=Dpkg::Use-Pty=0 install mc htop pg_activity
+apt-get -q -y -o=Dpkg::Use-Pty=0 install sudo wget curl lsb-release gnupg
 
 ###sync time
-apt-get -q -y install ntp
+apt-get -q -y -o=Dpkg::Use-Pty=0 install ntp
 ntpd -q -g
 
 ###create 'ctsms' user
@@ -74,10 +74,10 @@ wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$
 chmod 755 /ctsms/update
 
 ###install OpenJDK 11
-apt-get -q -y install default-jdk
+apt-get -q -y -o=Dpkg::Use-Pty=0 install default-jdk
 
 ###install tomcat9
-apt-get -q -y install libservlet3.1-java tomcat9
+apt-get -q -y -o=Dpkg::Use-Pty=0 install libservlet3.1-java tomcat9
 systemctl stop tomcat9
 #allow tomcat writing to /ctsms/external_files:
 usermod --append --groups ctsms tomcat
@@ -100,7 +100,7 @@ systemctl daemon-reload
 systemctl start tomcat9
 
 ###build phoenix
-apt-get -q -y install git maven
+apt-get -q -y -o=Dpkg::Use-Pty=0 install git maven
 rm /ctsms/build/ -rf
 mkdir /ctsms/build
 cd /ctsms/build
@@ -119,7 +119,7 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
 ###install postgres 13
-apt-get -q -y install postgresql postgresql-plperl
+apt-get -q -y -o=Dpkg::Use-Pty=0 install postgresql postgresql-plperl
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
@@ -132,7 +132,7 @@ sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/1
 systemctl restart postgresql
 
 ###enable ssh and database remote access
-#apt-get -q -y install ssh
+#apt-get -q -y -o=Dpkg::Use-Pty=0 install ssh
 #sed -r -i "s|#*listen_addresses.*|listen_addresses = '*'|" /etc/postgresql/13/main/postgresql.conf
 #echo -e "host\tall\tall\t0.0.0.0/0\tmd5\nhost\tall\tall\t::/0\tmd5" >> /etc/postgresql/13/main/pg_hba.conf
 #systemctl restart postgresql
@@ -143,14 +143,14 @@ rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
 ###install memcached
-apt-get -q -y install memcached
+apt-get -q -y -o=Dpkg::Use-Pty=0 install memcached
 chmod 777 /var/run/memcached
 sed -r -i 's/-p 11211/#-p 11211/' /etc/memcached.conf
 sed -r -i 's/-l 127\.0\.0\.1/-s \/var\/run\/memcached\/memcached.sock -a 0666/' /etc/memcached.conf
 systemctl restart memcached
 
 ###install bulk-processor
-apt-get -q -y install \
+apt-get -q -y -o=Dpkg::Use-Pty=0 install \
 libarchive-zip-perl \
 libconfig-any-perl \
 libdata-dump-perl \
@@ -218,7 +218,7 @@ libmoosex-hasdefaults-perl \
 cpanminus
 sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
 if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
-  apt-get -q -y install libsys-cpuaffinity-perl
+  apt-get -q -y -o=Dpkg::Use-Pty=0 install libsys-cpuaffinity-perl
 else
   cpanm Sys::CpuAffinity
   cpanm threads::shared

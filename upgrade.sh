@@ -83,7 +83,7 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 
 ###install or remove packages
-apt-get -q -y install postgresql-plperl
+apt-get -q -y -o=Dpkg::Use-Pty=0 install postgresql-plperl
 sudo -u postgres psql ctsms < /ctsms/build/ctsms/core/db/dbtool.sql
 
 ###apply database changes
