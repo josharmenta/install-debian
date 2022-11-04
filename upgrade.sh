@@ -74,6 +74,8 @@ if [ "$TAG" != "master" ]; then
   git checkout tags/$TAG -b $TAG
 fi
 VERSION=$(grep -oP '<application.version>\K[^<]+' /ctsms/build/ctsms/pom.xml)
+COMMIT=$(git rev-parse --short HEAD)
+sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /ctsms/build/ctsms/pom.xml
 mvn install -DskipTests
 if [ ! -f /ctsms/build/ctsms/web/target/ctsms-$VERSION.war ]; then
   # maybe we have more luck with dependency download on a 2nd try:
@@ -133,4 +135,4 @@ cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROO
 systemctl start tomcat9
 systemctl start apache2
 systemctl start cron
-echo "Phoenix CTMS $VERSION update finished."
+echo "Phoenix CTMS $VERSION [$COMMIT] update finished."
