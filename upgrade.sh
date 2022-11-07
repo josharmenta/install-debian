@@ -131,8 +131,12 @@ systemctl stop tomcat9
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 
+###setup cron
+chmod +rwx /ctsms/install/install_cron.sh
+/ctsms/install/install_cron.sh
+
 ###ready
 systemctl start tomcat9
 systemctl start apache2
-systemctl start cron
+#systemctl start cron
 echo "Phoenix CTMS $VERSION [$COMMIT] update finished."
