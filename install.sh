@@ -94,8 +94,10 @@ chmod 775 /var/lib/tomcat9/webapps
 sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat9
 echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat9
-sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat9\\n\\n# Lifecycle|" /usr/lib/systemd/system/tomcat9.service
-sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/|" /usr/lib/systemd/system/tomcat9.service
+mkdir /etc/systemd/system/tomcat9.service.d
+chmod 755 /etc/systemd/system/tomcat9.service.d
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/ctsms.conf -O /etc/systemd/system/tomcat9.service.d/ctsms.conf
+chmod 777 /etc/systemd/system/tomcat9.service.d/ctsms.conf
 systemctl daemon-reload
 systemctl start tomcat9
 
