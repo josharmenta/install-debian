@@ -76,6 +76,8 @@ fi
 VERSION=$(grep -oP '<application.version>\K[^<]+' /ctsms/build/ctsms/pom.xml)
 COMMIT=$(git rev-parse --short HEAD)
 sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /ctsms/build/ctsms/pom.xml
+UUID=$(cat /proc/sys/kernel/random/uuid)
+sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /ctsms/build/ctsms/pom.xml
 mvn install -DskipTests
 if [ ! -f /ctsms/build/ctsms/web/target/ctsms-$VERSION.war ]; then
   # maybe we have more luck with dependency download on a 2nd try:
