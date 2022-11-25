@@ -32,6 +32,7 @@ systemctl stop tomcat9
 
 ###re-create /ctsms directory with default-config and master-data
 mv /ctsms/external_files /tmp/external_files/
+UUID=$(sed -n "s/^\s*<application\.uuid>\([^<]\+\)<\/application\.uuid>\s*$/\1/p" /ctsms/build/ctsms/pom.xml)
 rm /ctsms/ -rf
 mkdir /ctsms
 wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh -O /ctsms/dbtool.sh
@@ -76,7 +77,6 @@ fi
 VERSION=$(grep -oP '<application.version>\K[^<]+' /ctsms/build/ctsms/pom.xml)
 COMMIT=$(git rev-parse --short HEAD)
 sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /ctsms/build/ctsms/pom.xml
-UUID=$(sed -n "s/^\s*<application\.uuid>\([^<]\+\)<\/application\.uuid>\s*$/\1/p" /ctsms/build/ctsms/pom.xml)
 if [ -z "$UUID" ]; then
   UUID=$(cat /proc/sys/kernel/random/uuid)
 fi
