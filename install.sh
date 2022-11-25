@@ -97,7 +97,7 @@ echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat9
 mkdir /etc/systemd/system/tomcat9.service.d
 chmod 755 /etc/systemd/system/tomcat9.service.d
 wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/tomcat/ctsms.conf -O /etc/systemd/system/tomcat9.service.d/ctsms.conf
-chmod 777 /etc/systemd/system/tomcat9.service.d/ctsms.conf
+chmod 644 /etc/systemd/system/tomcat9.service.d/ctsms.conf
 systemctl daemon-reload
 systemctl start tomcat9
 
