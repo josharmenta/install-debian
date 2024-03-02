@@ -81,7 +81,7 @@ sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.ve
 if [ -z "$UUID" ] || [ "$UUID" = "test" ]; then
   UUID=$(cat /proc/sys/kernel/random/uuid)
 fi
-sed -r -i "s/<application\.uuid><\/application\.uuid>/<application.uuid>$UUID<\/application.uuid>/" /ctsms/build/ctsms/pom.xml
+sed -r -i "s/<application\.uuid>(test)?<\/application\.uuid>/<application.uuid>$UUID<\/application.uuid>/" /ctsms/build/ctsms/pom.xml
 mvn install -DskipTests
 if [ ! -f /ctsms/build/ctsms/web/target/ctsms-$VERSION.war ]; then
   # maybe we have more luck with dependency download on a 2nd try:
