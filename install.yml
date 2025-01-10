@@ -15,16 +15,16 @@ PERM: 256m
 
   tasks:
   - name: Install General Packages
-      apt:
-        pkg:
-          - sudo
-          - wget
-          - curl
-          - lsb-release
-          - gnupg
-          - ntpd
-        state: latest
-        update_cache: true
+    apt:
+      pkg:
+        - sudo
+        - wget
+        - curl
+        - lsb-release
+        - gnupg
+        - ntpd
+      state: latest
+      update_cache: true
 
   - name: Sync Time
     ansible.builtin.command: ntpd -q -g
@@ -34,7 +34,7 @@ PERM: 256m
       name: ctsms
       shell: /bin/bash
 
-  - name: Prepare CTSMS directory
+  - name: Prepare /ctsms directory
     ansible.builtin.file:
       path: /ctsms
       state: directory
@@ -151,19 +151,18 @@ PERM: 256m
       mode: '0755'
 
   - name: Install OpenJDK 11
-      apt:
-        pkg:
-          - default-jdk
-        state: latest
-        update_cache: true
+    apt:
+      pkg: default-jdk
+      state: latest
+      update_cache: true
 
   - name: Install tomcat9
-      apt:
-        pkg:
-          - libservlet3.1-java
-          - tomcat9
-        state: latest
-        update_cache: true
+    apt:
+      pkg:
+        - libservlet3.1-java
+        - tomcat9
+      state: latest
+      update_cache: true
 
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
