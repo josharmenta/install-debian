@@ -12,6 +12,16 @@ PERM: 256m
   hosts: all
   remote_user: root
   become: true
+  vars:
+    tomcat_major_version: 9
+    tomcat_permissions_production: False
+    tomcat_users:
+      - username: "ctsms"
+        password: "ctsms"
+        roles: "tomcat,admin,manager,manager-gui"
+  roles:
+    - java-open-jdk11
+    - vantaworks.tomcat
 
   tasks:
   - name: Install General Packages
@@ -27,7 +37,7 @@ PERM: 256m
       update_cache: true
 
   - name: Sync Time
-    ansible.builtin.command: ntpd -q -g
+    service: name=ntp state=started enabled=yes
 
   - name: Create 'ctsms' user
     ansible.builtin.user:
@@ -149,12 +159,6 @@ PERM: 256m
       group: ctsms
       dest: /ctsms/update
       mode: '0755'
-
-  - name: Install OpenJDK 11
-    apt:
-      pkg: default-jdk
-      state: latest
-      update_cache: true
 
   - name: Install tomcat9
     apt:
