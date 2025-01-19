@@ -160,14 +160,6 @@ PERM: 256m
       dest: /ctsms/update
       mode: '0755'
 
-  - name: Install tomcat9
-    apt:
-      pkg:
-        - libservlet3.1-java
-        - tomcat9
-      state: latest
-      update_cache: true
-
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
       name: tomcat9

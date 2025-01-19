@@ -1,0 +1,188 @@
+- name: Install bulk-processor
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    tag: "master"
+    base_url: "https://github.com/phoenixctms"
+    bulk_processor_url: "{{ base_url }}/bulk-processor/archive/{{ tag }}.tar.gz"
+    scripts_base_url: "{{ base_url }}/install-debian/{{ tag }}"
+    dest_dir: "/ctsms/bulk_processor"
+    output_dir: "{{ dest_dir }}/output"
+    user_group: "ctsms"
+  tasks:
+    - name: Install Perl libraries and utilities
+      ansible.builtin.apt:
+        name:
+          - libarchive-zip-perl
+          - libconfig-any-perl
+          - libdata-dump-perl
+          - libdata-dumper-concise-perl
+          - libdata-uuid-perl
+          - libdata-validate-ip-perl
+          - libdate-calc-perl
+          - libdate-manip-perl
+          - libdatetime-format-iso8601-perl
+          - libdatetime-format-strptime-perl
+          - libdatetime-perl
+          - libdatetime-timezone-perl
+          - libdbd-csv-perl
+          - libdbd-mysql-perl
+          - libdbd-sqlite3-perl
+          - tdsodbc
+          - libdbd-odbc-perl
+          - libdigest-md5-perl
+          - libemail-mime-attachment-stripper-perl
+          - libemail-mime-perl
+          - libgearman-client-perl
+          - libhtml-parser-perl
+          - libintl-perl
+          - libio-compress-perl
+          - libio-socket-ssl-perl
+          - libjson-xs-perl
+          - liblog-log4perl-perl
+          - libmail-imapclient-perl
+          - libmarpa-r2-perl
+          - libmime-base64-perl
+          - libmime-lite-perl
+          - libmime-tools-perl
+          - libnet-address-ip-local-perl
+          - libnet-smtp-ssl-perl
+          - libole-storage-lite-perl
+          - libphp-serialization-perl
+          - libexcel-writer-xlsx-perl
+          - libspreadsheet-parseexcel-perl
+          - libstring-mkpasswd-perl
+          - libtext-csv-xs-perl
+          - libtie-ixhash-perl
+          - libtime-warp-perl
+          - liburi-find-perl
+          - libuuid-perl
+          - libwww-perl
+          - libxml-dumper-perl
+          - libxml-libxml-perl
+          - libyaml-libyaml-perl
+          - libyaml-tiny-perl
+          - libtemplate-perl
+          - libdancer-perl
+          - libdbd-pg-perl
+          - libredis-perl
+          - libjson-perl
+          - libplack-perl
+          - libcache-memcached-perl
+          - libdancer-session-memcached-perl
+          - libgraphviz-perl
+          - gnuplot
+          - imagemagick
+          - ghostscript
+          - build-essential
+          - libtest-utf8-perl
+          - libmoosex-hasdefaults-perl
+          - cpanminus
+        state: present
+        update_cache: yes
+        force: yes
+
+    - name: replace in sql files
+      shell: sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
+
+    - name: Install libsys-cpuaffinity-perl (Debian)
+      ansible.builtin.apt:
+        name:
+          - libsys-cpuaffinity-perl
+        state: present
+        update_cache: yes
+        force: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Perl CPU Affinity
+      community.general.cpanm:
+        name:
+          - Sys
+          - threads
+      when: ansible_os_family != "Debian"
+
+    - name: Install Perl modules
+      community.general.cpanm:
+        name:
+          - Dancer
+          - DateTime::Format::Excel
+          - Spreadsheet::Reader::Format
+          - Spreadsheet::Reader::ExcelXML
+        mode: compatibility
+
+    - name: Download bulk processor archive
+      ansible.builtin.get_url:
+        url: "{{ bulk_processor_url }}"
+        dest: "/ctsms/bulk-processor.tar.gz"
+        validate_certs: false
+
+    - name: Extract bulk processor archive
+      ansible.builtin.unarchive:
+        src: "/ctsms/bulk-processor.tar.gz"
+        dest: "{{ dest_dir }}"
+        remote_src: true
+        extra_opts:
+          - "--strip-components=1"
+
+    - name: Download bulk processor archive
+      ansible.builtin.get_url:
+          url: "{{ bulk_processor_url }}"
+          dest: "/ctsms/bulk-processor.tar.gz"
+          validate_certs: false
+
+    - name: Extract bulk processor archive
+      ansible.builtin.unarchive:
+         src: "/ctsms/bulk-processor.tar.gz"
+         dest: "{{ dest_dir }}"
+         remote_src: true
+         extra_opts:
+           - "--strip-components=1"
+
+    - name: Run minify.pl scripts
+      ansible.builtin.command:
+        cmd: >
+           perl {{ dest_dir }}/CTSMS/BulkProcessor/Projects/WebApps/minify.pl
+           --folder={{ dest_dir }}/CTSMS/BulkProcessor/Projects/WebApps/Signup
+
+    - name: Create output directory
+      ansible.builtin.file:
+       path: "{{ output_dir }}"
+       state: directory
+       owner: "{{ user_group }}"
+       group: "{{ user_group }}"
+       mode: "0777"
+
+    - name: Set permissions for bulk processor directory
+      ansible.builtin.file:
+       path: "{{ dest_dir }}"
+       state: directory
+       recurse: true
+       owner: "{{ user_group }}"
+       group: "{{ user_group }}"
+       mode: "0755"
+
+    - name: Remove bulk processor archive
+      ansible.builtin.file:
+       path: "/ctsms/bulk-processor.tar.gz"
+       state: absent
+
+    - name: Download scripts
+      ansible.builtin.get_url:
+        url: "{{ scripts_base_url }}/{{ item }}"
+        dest: "/ctsms/{{ item }}"
+      loop:
+        - ecrfdataexport.sh
+        - ecrfdataimport.sh
+        - inquirydataexport.sh
+
+    - name: Set ownership and permissions for scripts
+      ansible.builtin.file:
+        path: "/ctsms/{{ item }}"
+        owner: "{{ user_group }}"
+        group: "{{ user_group }}"
+        mode: "0755"
+      loop:
+        - ecrfdataexport.sh
+        - ecrfdataimport.sh
+        - inquirydataexport.sh
