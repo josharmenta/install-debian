@@ -54,13 +54,13 @@ PERM: 256m
       path: /ctsms/bulk_processor
       state: absent
 
-  - name: Download dbtool.sh
-    ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/dbtool.sh
-      owner: ctsms
-      group: ctsms
-      dest: /ctsms/dbtool.sh
-      mode: '0755'
+  - name: Write dbtool.sh
+    hosts: all
+    tasks:
+    - name: write dbtool.sh using jinja2
+      ansible.builtin.template:
+         src: templates/dbtool.j2
+         dest: /ctsms/dbtool.sh
 
   - name: Download clearcache.sh
     ansible.builtin.get_url:
@@ -88,18 +88,6 @@ PERM: 256m
       path: /ctsms/config.tar.gz
       state: absent
       force: true
-
-  - name: Add XMS Value to dbtool.sh
-    shell: sed -r -i "s/-Xms[^ ]+/-Xms$XMS/" /ctsms/dbtool.sh
-
-  - name: Add XMX Value to dbtool.sh
-    shell: sed -r -i "s/-Xmx[^ ]+/-Xmx$XMX/" /ctsms/dbtool.sh
-
-  - name: Add XSS Value to dbtool.sh
-    shell: sed -r -i "s/-Xss[^ ]+/-Xss$XSS/" /ctsms/dbtool.sh
-
-  - name: Add XSS Value to dbtool.sh
-    shell: sed -r -i "s/-XX:ReservedCodeCacheSize=[^ ]+/-XX:ReservedCodeCacheSize=$PERM/" /ctsms/dbtool.sh
 
   - name: Download config-default via basic auth
     ansible.builtin.get_url:
