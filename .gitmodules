@@ -1,0 +1,3 @@
+[submodule "master-data"]
+	path = master-data
+	url = https://github.com/phoenixctms/master-data/
