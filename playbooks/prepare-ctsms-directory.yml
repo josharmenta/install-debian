@@ -1,0 +1,26 @@
+tasks:
+
+
+  - name: Prepare /ctsms Directory
+    ansible.builtin.file:
+      path: /ctsms/
+      state: directory
+      mode: '0755'
+  - name: Remove /ctsms/bulk_processor
+    ansible.builtin.file:
+      path: /ctsms/bulk_processor/
+      state: absent
+  - name: Template dbtool to /ctsms/dbtool.sh
+    ansible.builtin.template:
+      src: ./templates/dbtool-linux.j2
+      dest: /ctsms/dbtool.sh
+      owner: ctsms
+      group: ctsms
+      mode: '0755'
+  - name: Template clearcache to /ctsms/clearcache.sh
+    ansible.builtin.template:
+      src: ./templates/clearcache.j2
+      dest: /ctsms/clearcache.sh
+      owner: ctsms
+      group: ctsms
+      mode: '0755'
