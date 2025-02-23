@@ -1,0 +1,12 @@
+#!/bin/bash
+
+TAG=master
+if [[ "$1" != "" ]]; then
+    TAG="$1"
+fi
+
+wget https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/upgrade.sh -O ~/upgrade.sh
+chmod 744 ~/upgrade.sh
+
+CURRENT_TIME=$(date "+%Y%m%d%H%M%S")
+sudo ~/upgrade.sh "$@" 2>&1 | tee ~/upgrade_$CURRENT_TIME.log

@@ -2,17 +2,15 @@ TAG: main
 CONFIG_REPO:
 TOKEN:
 
-XMS: 2048m
-XMX: 4096m
-XSS: 512k
-PERM: 256m
-
----
 - name: Install Phoenix CTMS
   hosts: all
   remote_user: root
   become: true
   vars:
+    xms: "2048m"
+    xmx: "4096m"
+    xss: "512k"
+    perm: "256m"
     tomcat_major_version: 9
     tomcat_permissions_production: False
     tomcat_users:
@@ -44,111 +42,7 @@ PERM: 256m
       name: ctsms
       shell: /bin/bash
 
-  - name: Prepare /ctsms directory
+  - name: Prepare /ctsms directory with default-config and master-data
     ansible.builtin.file:
       path: /ctsms
       state: directory
-
-  - name: Remove bulk_processor if installed
-    ansible.builtin.file:
-      path: /ctsms/bulk_processor
-      state: absent
-
-  - name: Write dbtool.sh
-    hosts: all
-    tasks:
-    - name: write dbtool.sh using jinja2
-      ansible.builtin.template:
-         src: templates/dbtool.j2
-         dest: /ctsms/dbtool.sh
-
-  - name: Download clearcache.sh
-    ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/clearcache.sh
-      owner: ctsms
-      group: ctsms
-      dest: /ctsms/clearcache.sh
-      mode: '0755'
-
-  - name: Download config-default via basic auth
-    ansible.builtin.get_url:
-      url: https://github.com/phoenixctms/config-default/archive/$TAG.tar.gz
-      dest: /ctsms/config.tar.gz
-      force_basic_auth: yes
-
-  - name: Extract config.tar.gz into /ctsms
-    ansible.builtin.unarchive:
-      src: /ctsms/config.tar.gz
-      dest: /ctsms/config
-      extra_opts:
-      - --strip-components 1
-
-  - name: Remove /ctsms/config.tar.gz
-    ansible.builtin.file:
-      path: /ctsms/config.tar.gz
-      state: absent
-      force: true
-
-  - name: Download config-default via basic auth
-    ansible.builtin.get_url:
-      url: https://api.github.com/repos/phoenixctms/master-data/tarball/$TAG
-      dest: /ctsms/master-data.tar.gz
-
-  - name: Remove /ctsms/config.tar.gz
-    ansible.builtin.file:
-      path: /ctsms/master_data
-      state: absent
-      force: true
-
-  - name: Create /ctsms/master_data
-    ansible.builtin.file:
-      path: /ctsms/master_data
-      state: present
-      force: true
-
-  - name: Extract master-data.tar.gz into /ctsms
-    ansible.builtin.unarchive:
-      src: /ctsms/master-data.tar.gz
-      dest: /ctsms/master_data
-      extra_opts:
-      - --strip-components 1
-
-  - name: Remove master-data.tar.gz
-    ansible.builtin.file:
-      path: /ctsms/master_data.tar.gz
-      state: absent
-      force: true
-
-  - name: Recursively change ownership of /ctsms
-    ansible.builtin.file:
-      path: /ctsms
-      state: directory
-      recurse: yes
-      owner: ctsms
-      group: ctsms
-
-  - name: Set permissions of /ctsms
-    ansible.builtin.file:
-      path: /ctsms
-      state: directory
-      mode: '0775'
-
-  - name: Set permissions of /ctsms/external_files
-    ansible.builtin.file:
-      path: /ctsms/external_files
-      state: directory
-      mode: '0775'
-      recurse: yes
-
-  - name: Download update via basic auth
-    ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/phoenixctms/install-debian/$TAG/update
-      owner: ctsms
-      group: ctsms
-      dest: /ctsms/update
-      mode: '0755'
-
-  - name: Stop service tomcat9, if started
-    ansible.builtin.service:
-      name: tomcat9
-      state: stopped

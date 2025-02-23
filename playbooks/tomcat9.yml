@@ -1,0 +1,24 @@
+- name: allow tomcat writing to /ctsms/external_files
+  user:
+    name: tomcat
+    groups: ctsms
+    append: yes
+- name: allow ctsms user to load jars from exploded .war
+  user:
+    name: ctsms
+    groups: tomcat,adm
+    append: yes
+- name: Template workers.properties to /etc/tomcat9/workers.properties
+  ansible.builtin.template:
+    src: ./templates/tomcat/workers.j2
+    dest: /etc/tomcat9/workers.properties
+    owner: root
+    group: tomcat
+    mode: '0640'
+- name: Template server.xml to /etc/tomcat9/server.xml
+  ansible.builtin.template:
+    src: ./templates/tomcat/workers.j2
+    dest: /etc/tomcat9/workers.properties
+    owner: root
+    group: tomcat
+    mode: '0640'
