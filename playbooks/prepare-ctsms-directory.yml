@@ -4,10 +4,12 @@ tasks:
       path: /ctsms/
       state: directory
       mode: '0755'
+
   - name: Remove /ctsms/bulk_processor
     ansible.builtin.file:
       path: /ctsms/bulk_processor/
       state: absent
+
   - name: Template dbtool to /ctsms/dbtool.sh
     ansible.builtin.template:
       src: ./templates/dbtool.sh.j2
@@ -15,6 +17,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Template clearcache to /ctsms/clearcache.sh
     ansible.builtin.template:
       src: ./templates/bash/clearcache.sh.j2
@@ -22,6 +25,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Copy config-default to /ctsms/config-default/
     ansible.builtin.copy:
       src: ./master-data/
@@ -29,6 +33,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Template dbtool to /ctsms/dbtool.sh
     ansible.builtin.template:
       src: ./templates/bash/dbtool.sh.j2
@@ -36,6 +41,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Copy master-data to /ctsms/master_data/
     ansible.builtin.copy:
       src: ./master-data/
@@ -43,6 +49,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Recursively change ownership of /ctsms/
     ansible.builtin.file:
       path: /ctsms/
@@ -51,6 +58,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+
   - name: Recursively change ownership of /ctsms/external_files
     ansible.builtin.file:
       path: /ctsms/external_files
@@ -59,6 +67,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
+      
   - name: Template update to /ctsms/update
     ansible.builtin.template:
       src: ./templates/update.j2
