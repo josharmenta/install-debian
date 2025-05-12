@@ -1,3 +1,16 @@
+- name: install libservlet3.1-java
+  ansible.builtin.apt:
+    name: libservlet3.1-java
+    state: present
+
+- name: install tomcat9
+  ansible.builtin.include_role:
+    name: vantaworks.tomcat
+    tomcat_major_version: 9
+- name: Stop service tomcat9, if started
+  ansible.builtin.service:
+    name: tomcat9
+    state: stopped
 - name: allow tomcat writing to /ctsms/external_files
   user:
     name: tomcat
@@ -10,15 +23,49 @@
     append: yes
 - name: Template workers.properties to /etc/tomcat9/workers.properties
   ansible.builtin.template:
-    src: ./templates/tomcat/workers.j2
+    src: ./templates/tomcat/workers.properties.j2
     dest: /etc/tomcat9/workers.properties
     owner: root
     group: tomcat
     mode: '0640'
 - name: Template server.xml to /etc/tomcat9/server.xml
   ansible.builtin.template:
-    src: ./templates/tomcat/workers.j2
-    dest: /etc/tomcat9/workers.properties
+    src: ./templates/tomcat/server.xml.j2
+    dest: /etc/tomcat9/server.xml
     owner: root
     group: tomcat
     mode: '0640'
+
+- name: Set JAVA_OPTS in /etc/default/tomcat9
+  lineinfile:
+    path: /etc/default/tomcat9
+    regexp: '^JAVA_OPTS='
+    line: 'JAVA_OPTS="-server -Djava.awt.headless=true -Xms{{ XMS }} -Xmx{{ XMX }} -Xss{{ XSS }} -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize={{ PERM }}"'
+    create: yes
+    backup: yes
+
+- name: Add CTSMS_PROPERTIES to /etc/default/tomcat9
+  lineinfile:
+    path: /etc/default/tomcat9
+    line: 'CTSMS_PROPERTIES=/ctsms/properties'
+    insertafter: EOF
+
+- name: Add CTSMS_JAVA to /etc/default/tomcat9
+  lineinfile:
+    path: /etc/default/tomcat9
+    line: 'CTSMS_JAVA=/ctsms/java'
+    insertafter: EOF
+
+- name: Ensure tomcat9.service.d directory exists
+  file:
+    path: /etc/systemd/system/tomcat9.service.d
+    state: directory
+    mode: '0755'
+
+- name: Template ctsms.conf to /etc/tomcat9/server.xml
+  ansible.builtin.template:
+    src: ./templates/tomcat/workers.j2
+    dest: /etc/systemd/system/tomcat9.service.d/ctsms.conf
+    owner: root
+    group: tomcat
+    mode: '0644'

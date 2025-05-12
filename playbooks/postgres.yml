@@ -1,0 +1,23 @@
+
+
+- name: Create PostgreSQL user
+  community.postgresql.postgresql_user:
+    name: ctsms
+    password: ctsms
+    login_user: postgres
+
+- name: Create PostgreSQL database with correct owner
+  community.postgresql.postgresql_db:
+    name: ctsms
+    owner: ctsms
+    login_user: postgres
+
+- name: Grant all privileges on the database to the user
+  community.postgresql.postgresql_privs:
+    db: ctsms
+    roles: ctsms
+    type: database
+    privs: ALL
+    objs: ctsms
+    grant_option: no
+    login_user: postgres

@@ -1,5 +1,5 @@
 tasks:
-  - name: Prepare /ctsms Directory
+  - name: Create /ctsms
     ansible.builtin.file:
       path: /ctsms/
       state: directory
@@ -10,15 +10,29 @@ tasks:
       state: absent
   - name: Template dbtool to /ctsms/dbtool.sh
     ansible.builtin.template:
-      src: ./templates/dbtool-linux.j2
+      src: ./templates/dbtool.sh.j2
       dest: /ctsms/dbtool.sh
       owner: ctsms
       group: ctsms
       mode: '0755'
   - name: Template clearcache to /ctsms/clearcache.sh
     ansible.builtin.template:
-      src: ./templates/clearcache.j2
+      src: ./templates/bash/clearcache.sh.j2
       dest: /ctsms/clearcache.sh
+      owner: ctsms
+      group: ctsms
+      mode: '0755'
+  - name: Copy config-default to /ctsms/config-default/
+    ansible.builtin.copy:
+      src: ./master-data/
+      dest: /ctsms/config-default/
+      owner: ctsms
+      group: ctsms
+      mode: '0755'
+  - name: Template dbtool to /ctsms/dbtool.sh
+    ansible.builtin.template:
+      src: ./templates/bash/dbtool.sh.j2
+      dest: /ctsms/dbtool.sh
       owner: ctsms
       group: ctsms
       mode: '0755'

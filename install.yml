@@ -1,28 +1,9 @@
-TAG: main
-CONFIG_REPO:
-TOKEN:
-
-- name: Install Phoenix CTMS
+- name: Install Phoenix CTMS v1.8.2
+  gather_facts: false
   hosts: all
-  remote_user: root
-  become: true
-  vars:
-    xms: "2048m"
-    xmx: "4096m"
-    xss: "512k"
-    perm: "256m"
-    tomcat_major_version: 9
-    tomcat_permissions_production: False
-    tomcat_users:
-      - username: "ctsms"
-        password: "ctsms"
-        roles: "tomcat,admin,manager,manager-gui"
-  roles:
-    - java-open-jdk11
-    - vantaworks.tomcat
-
   tasks:
   - name: Install General Packages
+    hosts: all
     apt:
       pkg:
         - sudo
@@ -35,14 +16,42 @@ TOKEN:
       update_cache: true
 
   - name: Sync Time
+    hosts: all
     service: name=ntp state=started enabled=yes
 
   - name: Create 'ctsms' user
+    hosts: all
     ansible.builtin.user:
       name: ctsms
-      shell: /bin/bash
 
-  - name: Prepare /ctsms directory with default-config and master-data
-    ansible.builtin.file:
-      path: /ctsms
-      state: directory
+  - name: Prepare ctsms directory with default-config and master-data
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/prepare-ctsms-directory.yml
+
+  - name: Install OpenJDK 11
+    ansible.builtin.include_role:
+      name: openjdk
+
+  - name: Install tomcat9
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/tomcat9.yml
+
+  - name: Build phoenix
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/build-phoenix.yml
+
+  # - name: Install Postgres 13
+  #
+  # - name: Enable SSH and database remote access
+  #
+  # - name: deploy .war
+  #
+  # - name: install bulk-bulk_processor
+  #
+  # - name: setup apache2
+  # - name: initialize database
+  # - name: setup cron
+  # - name: setup logrotate
+  # - name: render workflow diagrams
+  #
+  # - name: ready
