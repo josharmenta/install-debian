@@ -28,9 +28,9 @@
     hosts: all
     ansible.builtin.import_playbook: playbooks/prepare-ctsms-directory.yml
 
-  - name: Install OpenJDK 11
-    ansible.builtin.include_role:
-      name: openjdk
+  - name: Install OpenJDK
+    ansible.builtin.apt:
+      - openjdk
 
   - name: Install tomcat9
     hosts: all
@@ -46,7 +46,7 @@
   #
   # - name: deploy .war
   #
-  # - name: install bulk-bulk_processor
+  # - name: install bulk_processor
   #
   # - name: setup apache2
   # - name: initialize database

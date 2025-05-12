@@ -1,0 +1,6 @@
+
+{% if ansible_os_family == 'Windows' %}
+dbtool_lock_file_name=C\:\\ctsms\\{0}.lock
+{% else %}
+dbtool_lock_file_name=/ctsms/{0}.lock
+{% endif %}
