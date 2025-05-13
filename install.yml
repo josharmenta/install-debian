@@ -78,6 +78,11 @@
       group: wheel
       mode: "0644"
 
-  # - name: render workflow diagrams
+  - name: render workflow diagrams
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/render-workflow-diagrams.yml
   #
-  # - name: ready
+  - name: ready
+    hosts: all
+    ansible.builtin.debug:
+      msg: Phoenix CTMS installation finished.

@@ -1,1 +1,3 @@
 *.bak
+./inventories/dev/*
+./inventories/prod/*
