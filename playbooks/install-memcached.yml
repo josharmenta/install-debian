@@ -1,0 +1,36 @@
+- name: Install memcached
+  connection: local
+  become: true
+  tasks:
+    - name: Install memcached
+      ansible.builtin.apt:
+        name: memcached
+        state: present
+        update_cache: true
+      notify: Restart Memcached
+
+    - name: Ensure /var/run/memcached has correct permissions
+      ansible.builtin.file:
+        path: /var/run/memcached
+        mode: '0777'
+      notify: Restart Memcached
+
+    - name: Comment out TCP port line in memcached.conf
+      ansible.builtin.replace:
+        path: /etc/memcached.conf
+        regexp: '^-p 11211'
+        replace: '#-p 11211'
+      notify: Restart Memcached
+
+    - name: Replace bind IP line with Unix socket config
+      ansible.builtin.replace:
+        path: /etc/memcached.conf
+        regexp: '^-l 127\.0\.0\.1'
+        replace: '-s /var/run/memcached/memcached.sock -a 0666'
+      notify: Restart Memcached
+
+  handlers:
+    - name: Restart memcached
+      ansible.builtin.service:
+        name: memcached
+        state: restarted

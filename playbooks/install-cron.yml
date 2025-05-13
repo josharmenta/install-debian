@@ -1,0 +1,27 @@
+- name: Install cron
+  connection: local
+  become: true
+  tasks:
+    - name: Setup /etc/cron.d/ctsms
+      ansible.builtin.template:
+        src: ./templates/crontab/ctsms.j2
+        dest: /etc/logrotate.d/ctsms
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart cron
+
+    - name: Setup /etc/cron.d/my_department
+      ansible.builtin.template:
+        src: ./templates/crontab/my_department.j2
+        dest: /etc/logrotate.d/my_department
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart cron
+
+  handlers:
+    - name: Restart cron
+      ansible.builtin.service:
+        name: cron
+        state: restarted

@@ -1,0 +1,96 @@
+- name: Install Apache2
+  connection: local
+  become: true
+  vars:
+    certificate: "self-signed"
+    cert_subject: "/C=AT/ST=Austria/L=Graz/O=phoenix/CN={{ ansible_hostname }}"
+  tasks:
+    - name: Install Apache and required modules
+      ansible.builtin.apt:
+        name:
+          - apache2
+          - libapache2-mod-jk
+          - libapache2-mod-fcgid
+        state: present
+        update_cache: true
+      notify: Restart Apache2
+
+    - name: Add www-data to tomcat and ctsms groups
+      ansible.builtin.user:
+        name: www-data
+        groups:
+          - tomcat
+          - ctsms
+        append: true
+      notify: Restart Apache2
+
+    - name: Template 00_ctsms_http.conf to /etc/apache2/sites-available/
+      ansible.builtin.template:
+        src: ./templates/apache/00_ctsms_http.conf.j2
+        dest: /etc/apache2/sites-available/00_ctsms_http.conf
+      notify: Restart Apache2
+
+    - name: Template 00_ctsms_https.conf to /etc/apache2/sites-available/
+      ansible.builtin.template:
+        src: ./templates/apache/00_ctsms_https.conf.j2
+        dest: /etc/apache2/sites-available/00_ctsms_https.conf
+      notify: Restart Apache2
+
+    - name: Template blocklist.conf to /etc/apache2/
+      ansible.builtin.template:
+        src: ./templates/apache/blocklist.conf.j2
+        dest: /etc/apache2/blocklist.conf
+      notify: Restart Apache2
+
+    - name: Template jk.conf to /etc/apache2/mods-available/
+      ansible.builtin.template:
+        src: ./templates/apache/jk.conf.j2
+        dest: /etc/apache2/mods-available/
+      notify: Restart Apache2
+
+    - name: Disable default Apache site
+      ansible.builtin.command: a2dissite 000-default.conf
+      notify: Reload Apache
+
+    - name: Enable 00_ctsms_http.conf site
+      ansible.builtin.command: a2ensite 00_ctsms_http.conf
+      notify: Reload Apache
+
+    - name: Enable Apache SSL module
+      ansible.builtin.command: a2enmod ssl
+      notify: Reload Apache
+
+    - name: Enable Apache rewrite module
+      ansible.builtin.command: a2enmod rewrite
+      notify: Reload Apache
+
+    - name: Create SSL directory
+      ansible.builtin.file:
+        path: /etc/apache2/ssl
+        state: directory
+        mode: '0755'
+
+    - name: Generate self-signed SSL certificate (only if certificate == 'self-signed')
+      ansible.builtin.command: >
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048
+        -keyout /etc/apache2/ssl/apache.key
+        -subj "{{ cert_subject }}"
+        -out /etc/apache2/ssl/apache.crt
+      when: certificate == "self-signed"
+      notify: Reload Apache
+
+    - name: Set permissions on SSL key and cert
+      ansible.builtin.file:
+        path: /etc/apache2/ssl
+        mode: '0600'
+        recurse: true
+
+    - name: Enable 00_ctsms_https.conf site
+      ansible.builtin.command: a2ensite 00_ctsms_https.conf
+      notify: Reload Apache
+
+    # Handler to reload Apache
+    - name: Reload Apache
+      ansible.builtin.service:
+        name: apache2
+        state: reloaded

@@ -17,7 +17,7 @@
 
   - name: Sync Time
     hosts: all
-    service: name=ntp state=started enabled=yes
+    ansible.builtin.service: name=ntp state=started enabled=yes
 
   - name: Create 'ctsms' user
     hosts: all
@@ -52,15 +52,32 @@
     hosts: all
     ansible.builtin.import_playbook: playbooks/deploy-war.yml
 
+  - name: install memcached
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/install-memcached.yml
+
   - name: install bulk_processor
     hosts: all
     ansible.builtin.import_playbook: playbooks/install-bulk-processor.yml
 
-  #
-  # - name: setup apache2
+  - name: setup apache2
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/setup-apache2.yml
+
   # - name: initialize database
-  # - name: setup cron
-  # - name: setup logrotate
+
+  - name: install cron
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/install-cron.yml
+
+  - name: Setup logrotate
+    ansible.builtin.template:
+      src: ./templates/logrotate/ctsms.j2
+      dest: /etc/logrotate.d/ctsms
+      owner: root
+      group: wheel
+      mode: "0644"
+
   # - name: render workflow diagrams
   #
   # - name: ready
