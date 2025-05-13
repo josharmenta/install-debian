@@ -1,0 +1,96 @@
+- name: Install Postgres 13
+  connection: local
+  become: true
+  vars:
+    db_name: ctsms
+    db_password: ctsms
+    dbtool_sql_path: /ctsms/build/ctsms/core/db/dbtool.sql
+    schema_create_sql_path: /ctsms/build/ctsms/core/db/schema-create.sql
+    index_create_sql_path: /ctsms/build/ctsms/core/db/index-create.sql
+    schema_set_version_sql_path: /ctsms/build/ctsms/core/db/schema-set-version.sql
+  tasks:
+    - name: install postgresql
+      ansible.builtin.apt:
+        name: postgresql
+        state: present
+      notify: Restart PostgreSQL
+
+    - name: install postgresql-plperl
+      ansible.builtin.apt:
+        name: postgresql-plperl
+        state: present
+      notify: Restart PostgreSQL
+
+    - name: Create PostgreSQL user
+      community.postgresql.postgresql_user:
+        name: "{{ db_name }}"
+        password: "{{ db_password }}"
+        login_user: postgres
+      notify: Restart PostgreSQL
+
+    - name: Create PostgreSQL database with correct owner
+      community.postgresql.postgresql_db:
+        name: ctsms
+        owner: ctsms
+        login_user: postgres
+      notify: Restart PostgreSQL
+
+    - name: Grant all privileges on the database to the user
+      community.postgresql.postgresql_privs:
+        db: ctsms
+        roles: ctsms
+        type: database
+        privs: ALL
+        objs: ctsms
+        grant_option: no
+        login_user: postgres
+      notify: Restart PostgreSQL
+
+    - name: Run dbtool.sql as postgres
+      community.postgresql.postgresql_script:
+        db: "{{ db_name }}"
+        login_user: postgres
+        executable: psql
+        path: "{{ dbtool_sql_path }}"
+      notify: Restart PostgreSQL
+
+    - name: Run schema-create.sql as ctsms
+      community.postgresql.postgresql_script:
+        db: "{{ db_name }}"
+        login_user: ctsms
+        executable: psql
+        path: "{{ schema_create_sql_path }}"
+      notify: Restart PostgreSQL
+
+    - name: Run index-create.sql as ctsms
+      community.postgresql.postgresql_script:
+        db: "{{ db_name }}"
+        login_user: ctsms
+        executable: psql
+        path: "{{ index_create_sql_path }}"
+      notify: Restart PostgreSQL
+
+    - name: Run schema-set-version.sql as ctsms
+      community.postgresql.postgresql_script:
+        db: "{{ db_name }}"
+        login_user: ctsms
+        executable: psql
+        path: "{{ schema_set_version_sql_path }}"
+      notify: Restart PostgreSQL
+
+###
+### Any custom scripts needing to add to the database should be invoked here.
+###
+
+    - name: Set join_collapse_limit to 1 in postgresql.conf
+      ansible.builtin.replace:
+        path: /etc/postgresql/13/main/postgresql.conf
+        regexp: '^#?join_collapse_limit\s*=.*'
+        replace: 'join_collapse_limit = 1'
+      notify: Restart PostgreSQL
+
+  handlers:
+    - name: Restart PostgreSQL
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted

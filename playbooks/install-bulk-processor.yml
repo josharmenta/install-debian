@@ -98,14 +98,14 @@
         force: yes
       when: ansible_os_family == "Debian"
 
-    - name: Install Perl CPU Affinity
+    - name: Install sys, threads from CPANM
       community.general.cpanm:
         name:
           - Sys
           - threads
       when: ansible_os_family != "Debian"
 
-    - name: Install Perl modules
+    - name: Install Perl modules from CPANM
       community.general.cpanm:
         name:
           - Dancer
@@ -113,3 +113,87 @@
           - Spreadsheet::Reader::Format
           - Spreadsheet::Reader::ExcelXML
         mode: compatibility
+
+    - name: Download bulk-processor archive
+      ansible.builtin.get_url:
+        url: "https://github.com/phoenixctms/bulk-processor/archive/{{ tag }}.tar.gz"
+        dest: /ctsms/bulk-processor.tar.gz
+        mode: '0644'
+        force: true
+        validate_certs: false
+        headers:
+          Content-Disposition: "attachment"
+
+    - name: Extract bulk-processor archive
+      ansible.builtin.unarchive:
+        src: /ctsms/bulk-processor.tar.gz
+        dest: /ctsms/bulk_processor
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+
+    - name: Run minify.pl on Signup folder
+      ansible.builtin.command:
+        cmd: >
+          perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl
+          --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
+
+    - name: Create /ctsms/bulk_processor/output directory
+      ansible.builtin.file:
+        path: /ctsms/bulk_processor/output
+        state: directory
+        mode: '0777'
+        recurse: true
+        owner: ctsms
+        group: ctsms
+
+    - name: Ensure ownership of /ctsms/bulk_processor
+      ansible.builtin.file:
+        path: /ctsms/bulk_processor
+        state: directory
+        recurse: true
+        owner: ctsms
+        group: ctsms
+
+    - name: Set permissions 0755 on /ctsms/bulk_processor
+      ansible.builtin.file:
+        path: /ctsms/bulk_processor
+        state: directory
+        recurse: true
+        mode: '0755'
+
+    - name: Set permissions 0777 on /ctsms/bulk_processor/output
+      ansible.builtin.file:
+        path: /ctsms/bulk_processor/output
+        state: directory
+        recurse: true
+        mode: '0777'
+
+    - name: Remove archive file /ctsms/bulk-processor.tar.gz
+      ansible.builtin.file:
+        path: /ctsms/bulk-processor.tar.gz
+        state: absent
+
+    - name: Template ecrfdataexport.sh to /ctsms/
+      ansible.builtin.template:
+        src: ./templates/ecrfdataexport.j2
+        dest: /ctsms/ecrfdataexport.sh
+        owner: ctsms
+        group: ctsms
+        mode: '0755'
+
+    - name: Template ecrfdataeimport.sh to /ctsms/
+      ansible.builtin.template:
+        src: ./templates/ecrfdataimport.j2
+        dest: /ctsms/ecrfdataimport.sh
+        owner: ctsms
+        group: ctsms
+        mode: '0755'
+
+    - name: Template inquirydataexport.sh to /ctsms/
+      ansible.builtin.template:
+        src: ./templates/inquirydataexport.j2
+        dest: /ctsms/inquirydataexport.sh
+        owner: ctsms
+        group: ctsms
+        mode: '0755'

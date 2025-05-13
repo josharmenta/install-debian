@@ -67,7 +67,7 @@ tasks:
       owner: ctsms
       group: ctsms
       mode: '0755'
-      
+
   - name: Template update to /ctsms/update
     ansible.builtin.template:
       src: ./templates/update.j2

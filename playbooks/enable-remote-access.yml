@@ -1,0 +1,40 @@
+- name: Install Postgres 13
+  connection: local
+  become: true
+  tasks:
+    - name: install ssh
+      ansible.builtin.apt:
+        name: ssh
+        state: present
+
+    - name: Set listen_addresses in postgresql.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/13/main/postgresql.conf
+        regexp: '^#?listen_addresses\s*='
+        line: "listen_addresses = '*'"
+        backup: yes
+      notify: Restart PostgreSQL
+
+    - name: Allow IPv4 remote connections in pg_hba.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/13/main/pg_hba.conf
+        line: 'host    all             all             0.0.0.0/0               md5'
+        state: present
+        create: yes
+        backup: yes
+      notify: Restart PostgreSQL
+
+    - name: Allow IPv6 remote connections in pg_hba.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/13/main/pg_hba.conf
+        line: 'host    all             all             ::/0                    md5'
+        state: present
+        create: yes
+        backup: yes
+      notify: Restart PostgreSQL
+
+  handlers:
+    - name: Restart PostgreSQL
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted

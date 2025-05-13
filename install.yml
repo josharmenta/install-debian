@@ -40,13 +40,22 @@
     hosts: all
     ansible.builtin.import_playbook: playbooks/build-phoenix.yml
 
-  # - name: Install Postgres 13
-  #
-  # - name: Enable SSH and database remote access
-  #
-  # - name: deploy .war
-  #
-  # - name: install bulk_processor
+  - name: Install Postgres 13
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/install-postgres.yml
+
+  - name: Enable SSH and database remote access
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/enable-remote-access.yml
+
+  - name: deploy .war
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/deploy-war.yml
+
+  - name: install bulk_processor
+    hosts: all
+    ansible.builtin.import_playbook: playbooks/install-bulk-processor.yml
+
   #
   # - name: setup apache2
   # - name: initialize database
