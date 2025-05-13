@@ -1,1 +1,11 @@
+[webapp]
+localhost ansible_connection=local
+
+[db]
+localhost ansible_connection=local
+
+[bulk-processor]
+localhost ansible_connection=local
+
+[reverse-proxy]
 localhost ansible_connection=local

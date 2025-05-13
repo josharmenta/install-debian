@@ -17,7 +17,10 @@
 
   - name: Sync Time
     hosts: all
-    ansible.builtin.service: name=ntp state=started enabled=yes
+    ansible.builtin.service:
+      name: ntp
+      state: started
+      enabled=: yes
 
   - name: Create 'ctsms' user
     hosts: all
@@ -29,48 +32,50 @@
     ansible.builtin.import_playbook: playbooks/prepare-ctsms-directory.yml
 
   - name: Install OpenJDK
+    hosts: all
     ansible.builtin.apt:
       - openjdk
 
   - name: Install tomcat9
-    hosts: all
+    hosts: webapp
     ansible.builtin.import_playbook: playbooks/tomcat9.yml
 
   - name: Build phoenix
-    hosts: all
+    hosts: webapp
     ansible.builtin.import_playbook: playbooks/build-phoenix.yml
 
   - name: Install Postgres 13
-    hosts: all
+    hosts: db
     ansible.builtin.import_playbook: playbooks/install-postgres.yml
 
   - name: Enable SSH and database remote access
-    hosts: all
+    hosts: db
     ansible.builtin.import_playbook: playbooks/enable-remote-access.yml
 
   - name: deploy .war
-    hosts: all
+    hosts: webapp
     ansible.builtin.import_playbook: playbooks/deploy-war.yml
 
   - name: install memcached
-    hosts: all
+    hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-memcached.yml
 
   - name: install bulk_processor
-    hosts: all
+    hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-bulk-processor.yml
 
   - name: setup apache2
-    hosts: all
+    hosts: reverse-proxy
     ansible.builtin.import_playbook: playbooks/setup-apache2.yml
 
   # - name: initialize database
 
   - name: install cron
-    hosts: all
+    hosts: webapp
     ansible.builtin.import_playbook: playbooks/install-cron.yml
 
   - name: Setup logrotate
+    hosts: webapp
     ansible.builtin.template:
       src: ./templates/logrotate/ctsms.j2
       dest: /etc/logrotate.d/ctsms
@@ -79,7 +84,7 @@
       mode: "0644"
 
   - name: render workflow diagrams
-    hosts: all
+    hosts: webapp
     ansible.builtin.import_playbook: playbooks/render-workflow-diagrams.yml
   #
   - name: ready
