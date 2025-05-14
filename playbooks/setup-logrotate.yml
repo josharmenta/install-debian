@@ -1,5 +1,4 @@
   - name: Setup logrotate
-    hosts: webapp
     ansible.builtin.template:
       src: ./templates/logrotate/ctsms.j2
       dest: /etc/logrotate.d/ctsms

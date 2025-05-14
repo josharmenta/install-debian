@@ -1,5 +1,4 @@
 - name: Install Tomcat 9
-  connection: local
   become: true
   vars:
 - tasks:
