@@ -4,7 +4,7 @@
     - name: Setup /etc/cron.d/ctsms
       ansible.builtin.template:
         src: ./templates/crontab/ctsms.j2
-        dest: /etc/logrotate.d/ctsms
+        dest: /etc/crontab/ctsms
         owner: root
         group: root
         mode: "0644"
@@ -13,7 +13,7 @@
     - name: Setup /etc/cron.d/my_department
       ansible.builtin.template:
         src: ./templates/crontab/my_department.j2
-        dest: /etc/logrotate.d/my_department
+        dest: /etc/crontab/my_department
         owner: root
         group: root
         mode: "0644"
