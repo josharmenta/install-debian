@@ -3,6 +3,11 @@
   become: true
   vars:
 - tasks:
+  - name: install openjdk
+    ansible.builtin.apt:
+      name: openjdk
+      state: present
+
   - name: install libservlet3.1-java
     ansible.builtin.apt:
       name: libservlet3.1-java
