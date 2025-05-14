@@ -1,9 +1,7 @@
 - name: Install Phoenix CTMS v1.8.2
   gather_facts: false
-  hosts: all
   tasks:
   - name: Install General Packages
-    hosts: all
     apt:
       pkg:
         - sudo
@@ -16,19 +14,16 @@
       update_cache: true
 
   - name: Sync Time
-    hosts: all
     ansible.builtin.service:
       name: ntp
       state: started
       enabled: yes
 
   - name: Create 'ctsms' user
-    hosts: all
     ansible.builtin.user:
       name: ctsms
 
   - name: Prepare ctsms directory with default-config and master-data
-    hosts: all
     ansible.builtin.import_playbook: playbooks/prepare-ctsms-directory.yml
 
   - name: Install OpenJDK
@@ -37,45 +32,35 @@
       - openjdk
 
   - name: Install tomcat9
-    hosts: webapp
     ansible.builtin.import_playbook: playbooks/tomcat9.yml
 
   - name: Build phoenix
-    hosts: webapp
     ansible.builtin.import_playbook: playbooks/build-phoenix.yml
 
   - name: Install Postgres 13
-    hosts: db
     ansible.builtin.import_playbook: playbooks/install-postgres.yml
 
   - name: Enable SSH and database remote access
-    hosts: db
     ansible.builtin.import_playbook: playbooks/enable-remote-access.yml
 
   - name: Deploy .war
-    hosts: webapp
     ansible.builtin.import_playbook: playbooks/deploy-war.yml
 
   - name: Install memcached
-    hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-memcached.yml
 
   - name: Install bulk_processor
-    hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-bulk-processor.yml
 
   - name: Setup apache2
-    hosts: reverse-proxy
     ansible.builtin.import_playbook: playbooks/setup-apache2.yml
 
   # - name: initialize database
 
   - name: Install cron
-    hosts: webapp
     ansible.builtin.import_playbook: playbooks/install-cron.yml
 
   - name: Setup logrotate
-    hosts: webapp
     ansible.builtin.template:
       src: ./templates/logrotate/ctsms.j2
       dest: /etc/logrotate.d/ctsms
@@ -84,10 +69,8 @@
       mode: "0644"
 
   - name: Render workflow diagrams
-    hosts: webapp
     ansible.builtin.import_playbook: playbooks/render-workflow-diagrams.yml
   #
   - name: Ready
-    hosts: all
     ansible.builtin.debug:
       msg: Phoenix CTMS installation finished.
