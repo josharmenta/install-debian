@@ -20,7 +20,7 @@
     ansible.builtin.service:
       name: ntp
       state: started
-      enabled=: yes
+      enabled: yes
 
   - name: Create 'ctsms' user
     hosts: all
@@ -32,7 +32,7 @@
     ansible.builtin.import_playbook: playbooks/prepare-ctsms-directory.yml
 
   - name: Install OpenJDK
-    hosts: all
+    hosts: webapp
     ansible.builtin.apt:
       - openjdk
 
@@ -52,25 +52,25 @@
     hosts: db
     ansible.builtin.import_playbook: playbooks/enable-remote-access.yml
 
-  - name: deploy .war
+  - name: Deploy .war
     hosts: webapp
     ansible.builtin.import_playbook: playbooks/deploy-war.yml
 
-  - name: install memcached
+  - name: Install memcached
     hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-memcached.yml
 
-  - name: install bulk_processor
+  - name: Install bulk_processor
     hosts: bulk-processor
     ansible.builtin.import_playbook: playbooks/install-bulk-processor.yml
 
-  - name: setup apache2
+  - name: Setup apache2
     hosts: reverse-proxy
     ansible.builtin.import_playbook: playbooks/setup-apache2.yml
 
   # - name: initialize database
 
-  - name: install cron
+  - name: Install cron
     hosts: webapp
     ansible.builtin.import_playbook: playbooks/install-cron.yml
 
@@ -83,11 +83,11 @@
       group: wheel
       mode: "0644"
 
-  - name: render workflow diagrams
+  - name: Render workflow diagrams
     hosts: webapp
     ansible.builtin.import_playbook: playbooks/render-workflow-diagrams.yml
   #
-  - name: ready
+  - name: Ready
     hosts: all
     ansible.builtin.debug:
       msg: Phoenix CTMS installation finished.

@@ -1,0 +1,568 @@
+- name: Initialize Database
+  connection: local
+  become: true
+  gather_facts: yes
+  vars:
+    titles_file: /ctsms/master_data/titles.csv
+    bank_identification_file: /ctsms/master_data/kiverzeichnis_gesamt_de_1347893202433.csv
+    countries_file: /ctsms/master_data/countries.txt
+    street_names_file: /ctsms/master_data/streetnames.csv
+    icd_systematics_file: /ctsms/master_data/icd10gm2012syst_claml_20110923.xml
+    icd_systematics_lang: de
+    alpha_id_file: /ctsms/master_data/icd10gm2012_alphaid_edv_ascii_20110930.txt
+    alpha_id_file_encoding: ISO-8859-1
+    alpha_id_file_revision: icd10gm2012syst_claml_20110923
+    ops_systematics_file: /ctsms/master_data/ops2012syst_claml_20111103.xml
+    ops_systematics_file_lang: de
+    ops_codes_file: /ctsms/master_data/ops2011alpha_edv_ascii_20111031.txt
+    ops_codes_file_revisions: ops2012syst_claml_20111103
+    asp_substances_file: /ctsms/master_data/asp_register_20240316.xls
+    asp_substances_file_encoding: Cp1252
+    department_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
+    user_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
+    cron_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
+    IP: "{{ ansible_default_ipv4.address }}"
+
+  tasks:
+    - name: initialize db by inserting required setup records
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -i -f
+
+    - name: import criterion properties tables
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
+
+    - name:  import permission definitions from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv
+
+    - name:  import inventory file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name:  import staff file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name:  import course file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name:  import trial file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name:  import proband file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import mass mail file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import input field image file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import input staff image file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import proband image file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import job data file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import course certificate file mime types from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1
+
+    - name: import titles from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -it "{{ titles_file }}" -e ISO-8859-1
+
+    - name: import bank identifications from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ib "{{ bank_identification_file }}" -e ISO-8859-1
+
+    - name: import country names from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ic "{{ countries_file }}" -e ISO-8859-1
+
+    - name: import zip codes from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -iz "{{ street_names_file }}" -e utf-8
+
+    - name: import street names from csv/text file
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -is "{{ street_names_file }}" -e utf-8
+
+    - name: import icd systematics with language encoding
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -iis "{{ icd_systematics_file }}" -sl "{{ icd_systematics_lang }}"
+
+    - name: import alpha ids
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -iai "{{ alpha_id_file }}" -e "{{ alpha_id_file_encoding }}" -isr "{{ alpha_id_file_revision }}"
+
+    - name: import ops systematics
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ios "{{ ops_systematics_file }}" -sl "{{ ops_systematics_file_lang }}"
+
+    - name: import ops codes
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ioc "{{ ops_codes_file }}" -osr "{{ ops_codes_file_revisions }}"
+
+    - name: import asp and substances
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -ia "{{ asp_substances_file }}" -e "{{ asp_substances_file_encoding }}"
+
+    - name: create department 'my_department'
+      become: yes
+      become_user: ctsms
+      shell: /ctsms/dbtool.sh -cd -dlk my_department -dp "{{ department_password }}"
+
+    - name: create user 'phoenix'
+      become: yes
+      become_user: ctsms
+      shell: |
+         /ctsms/dbtool.sh -cu -dlk my_department
+         -dp "{{ department_password }}"
+         -u "phoenix"
+         -p "$USER_PASSWORD"
+         -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,
+         TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,
+         MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,
+         TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
+
+    - name: create user 'my_department_signup_de'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_de"
+        -p "my_department_signup_de"
+        -ul de
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        OURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_en'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_en"
+        -p "my_department_signup_en"
+        -ul en
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_da'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_da"
+        -p "my_department_signup_da"
+        -ul da
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_es'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_es"
+        -p "my_department_signup_es"
+        -ul es
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_fi'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_fi"
+        -p "my_department_signup_fi"
+        -ul fi
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_fr'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_fr"
+        -p "my_department_signup_fr"
+        -ul fr
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_hu'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_hu"
+        -p "my_department_signup_hu"
+        -ul hu
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_it'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_it"
+        -p "my_department_signup_it"
+        -ul it
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ja'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ja"
+        -p "my_department_signup_ja"
+        -ul ja
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ko'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ko"
+        -p "my_department_signup_ko"
+        -ul ko
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_nl'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_nl"
+        -p "my_department_signup_nl"
+        -ul nl
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_pt'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_pt"
+        -p "my_department_signup_pt"
+        -ul pt
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ro'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ro"
+        -p "my_department_signup_ro"
+        -ul ro
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_sk'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_sk"
+        -p "my_department_signup_sk"
+        -ul sk
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_sl'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_sl"
+        -p "my_department_signup_sl"
+        -ul sl
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_sv'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_sv"
+        -p "my_department_signup_sv"
+        -ul sv
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_uk'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_uk"
+        -p "my_department_signup_uk"
+        -ul uk
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ru'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ru"
+        -p "my_department_signup_ru"
+        -ul ru
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ln'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ln"
+        -p "my_department_signup_ln"
+        -ul ln
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_sw'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_sw"
+        -p "my_department_signup_sw"
+        -ul sw
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_yo'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_yo"
+        -p "my_department_signup_yo"
+        -ul yo
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ig'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ig"
+        -p "my_department_signup_ig"
+        -ul ig
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ff'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ff"
+        -p "my_department_signup_ff"
+        -ul ff
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_ar'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_ar"
+        -p "my_department_signup_ar"
+        -ul ar
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_kg'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_kg"
+        -p "my_department_signup_kg"
+        -ul kg
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_hi'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_hi"
+        -p "my_department_signup_hi"
+        -ul hi
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_signup_zh'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_signup_zh"
+        -p "my_department_signup_zh"
+        -ul yo
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+
+    - name: create user 'my_department_cron'
+      become: yes
+      become_user: ctsms
+      shell: |
+        /ctsms/dbtool.sh -cu -dlk my_department
+        -dp "{{ department_password }}"
+        -u "my_department_cron"
+        -p "{{ cron_password }}"
+        -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,
+        TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,
+        MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,
+        TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
+
+    - name: Update ctsms_base_uri in EcrfExporter settings
+      ansible.builtin.lineinfile:
+        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfExporter/settings.yml
+        regexp: '^ctsms_base_uri:.*'
+        line: "ctsms_base_uri: 'https://{{ IP }}'"
+        backrefs: yes
+
+    - name: Update ctsms_base_uri in EcrfImporter settings
+      ansible.builtin.lineinfile:
+        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfImporter/settings.yml
+        regexp: '^ctsms_base_uri:.*'
+        line: "ctsms_base_uri: 'https://{{ IP }}'"
+        backrefs: yes
+
+    - name: Update ctsms_base_uri in InquiryExporter settings
+      ansible.builtin.lineinfile:
+        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/InquiryExporter/settings.yml
+        regexp: '^ctsms_base_uri:.*'
+        line: "ctsms_base_uri: 'https://{{ IP }}'"
+        backrefs: yes
+
+    - name: Update ctsms_base_uri in Signup settings
+      ansible.builtin.lineinfile:
+        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup/settings.yml
+        regexp: '^ctsms_base_uri:.*'
+        line: "ctsms_base_uri: 'https://{{ IP }}'"
+        backrefs: yes
+
+    - name: Run default criteria creation
+      ansible.builtin.command:
+        cmd: perl process.pl --task=create_criteria --force --skip-errors
+        chdir: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/Criteria
+
+    - name: Print department passphrase
+      ansible.builtin.debug:
+        msg: "The department passphrase for 'my_department' when adding users with /ctsms/dbtool.sh is {{ department_password }}."
+
+    - name: Print login info
+      ansible.builtin.debug:
+        msg: "Log in at https://${IP} with username 'phoenix' password {{ user_password }}."
