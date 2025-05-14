@@ -41,14 +41,12 @@
         path: /ctsms/build/ctsms/pom.xml
         regexp: '(<application.version>)[^<]+(</application.version>)'
         replace: '\1{{ app_version.stdout }} [{{ git_commit.stdout }}]\2'
-      backup: yes
 
     - name: Update application.uuid tag with generated UUID
       replace:
         path: /ctsms/build/ctsms/pom.xml
         regexp: '<application\.uuid></application\.uuid>'
         replace: '<application.uuid>{{ uuid_output.stdout }}</application.uuid>'
-      backup: yes
 
     - name: Run mvn install with -DskipTests
       command: mvn install -DskipTests
