@@ -15,7 +15,6 @@
   - name: install tomcat9
     ansible.builtin.include_role:
       name: vantaworks.tomcat
-      tomcat_major_version: 9
 
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
