@@ -1,5 +1,4 @@
 - name: Install Apache2
-  connection: local
   become: true
   vars:
     certificate: "self-signed"

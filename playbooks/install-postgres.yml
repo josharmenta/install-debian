@@ -1,5 +1,4 @@
 - name: Install Postgres 13
-  connection: local
   become: true
   vars:
     db_name: ctsms

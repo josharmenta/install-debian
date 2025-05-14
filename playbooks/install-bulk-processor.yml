@@ -1,5 +1,4 @@
 - name: Install bulk-processor
-  connection: local
   become: true
   vars:
     tag: "master"

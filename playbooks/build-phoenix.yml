@@ -1,5 +1,4 @@
 - name: Build Phoenix CTMS
-  connection: local
   become: true
   tasks:
     - name: install maven

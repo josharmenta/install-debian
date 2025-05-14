@@ -1,5 +1,4 @@
 - name: Initialize Database
-  connection: local
   become: true
   gather_facts: yes
   vars:

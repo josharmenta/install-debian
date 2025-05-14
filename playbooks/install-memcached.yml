@@ -1,5 +1,4 @@
 - name: Install memcached
-  connection: local
   become: true
   tasks:
     - name: Install memcached

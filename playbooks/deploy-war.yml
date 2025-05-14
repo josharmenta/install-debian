@@ -1,5 +1,4 @@
 - name: Deploy .war
-  connection: local
   become: true
   tasks:
     - name: Change file ownership, group and permissions
