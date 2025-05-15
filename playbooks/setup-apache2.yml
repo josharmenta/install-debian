@@ -13,7 +13,7 @@
           - libapache2-mod-fcgid
         state: present
         update_cache: true
-      notify: Restart Apache2
+      notify: Reload Apache
 
     - name: Add www-data to tomcat and ctsms groups
       ansible.builtin.user:
@@ -22,13 +22,13 @@
           - tomcat
           - ctsms
         append: true
-      notify: Restart Apache2
+      notify: Reload Apache
 
     - name: Template 00_ctsms_http.conf to /etc/apache2/sites-available/
       ansible.builtin.template:
         src: ../templates/apache/00_ctsms_http.conf.j2
         dest: /etc/apache2/sites-available/00_ctsms_http.conf
-      notify: Restart Apache2
+      notify: Reload Apache
 
     - name: Template 00_ctsms_https.conf to /etc/apache2/sites-available/
       ansible.builtin.template:
