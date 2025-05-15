@@ -124,7 +124,7 @@
 
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
-      name: tomcat9
+      name: tomcat
       state: stopped
 
   - name: allow tomcat writing to /ctsms/external_files
@@ -191,5 +191,5 @@
 
   - name: Start service tomcat9
     ansible.builtin.service:
-      name: tomcat9
+      name: tomcat
       state: started
