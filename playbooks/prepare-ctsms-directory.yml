@@ -16,7 +16,7 @@
 
     - name: Template dbtool to /ctsms/dbtool.sh
       ansible.builtin.template:
-        src: ./templates/dbtool.sh.j2
+        src: templates/shell/dbtool.sh.j2
         dest: /ctsms/dbtool.sh
         owner: ctsms
         group: ctsms
