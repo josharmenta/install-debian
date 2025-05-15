@@ -71,7 +71,7 @@
 
     - name: Run schema-create.sql as ctsms
       become: true
-      become_user: ctsms
+      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
@@ -80,7 +80,7 @@
 
     - name: Run index-create.sql as ctsms
       become: true
-      become_user: ctsms
+      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
@@ -89,7 +89,7 @@
 
     - name: Run schema-set-version.sql as ctsms
       become: true
-      become_user: ctsms
+      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
