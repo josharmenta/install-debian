@@ -7,7 +7,12 @@
     XMX: "4096m"
     XSS: "512k"
     PERM: "256m"
+    tomcat_version: 9.0.105
   tasks:
+  ## Note: Debian Bookworm no longer includes tomcat9 and the backup repos are a
+  ## PITA to get working, so I used this article as a basis for the following code:
+  ## https://kifarunix.com/how-to-install-tomcat-9-on-debian-12/
+  ## If you get a 404 error, update the tomcat_version variable
   - name: install default OpenJDK
     ansible.builtin.apt:
       name: default-jdk
@@ -40,10 +45,6 @@
       group: tomcat
       mode: '0755'
 
-  - name: Set Tomcat version
-    set_fact:
-      tomcat_version: 9.0.105
-
   - name: Download Tomcat 9 archive
     get_url:
       url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
@@ -56,6 +57,7 @@
       dest: /opt/tomcat9
       remote_src: yes
       extra_opts: [--strip-components=1]
+
   - name: Change ownership of Tomcat directories
     file:
       path: "/opt/tomcat9/{{ item }}"
@@ -194,7 +196,7 @@
       group: tomcat
       mode: '0644'
 
-  - name: Start service tomcat9
+  - name: Start service tomcat
     ansible.builtin.service:
       name: tomcat
       state: started
