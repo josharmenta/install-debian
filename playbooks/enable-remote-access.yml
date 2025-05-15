@@ -9,7 +9,7 @@
 
     - name: Set listen_addresses in postgresql.conf
       ansible.builtin.lineinfile:
-        path: /etc/postgresql/13/main/postgresql.conf
+        path: /etc/postgresql/15/main/postgresql.conf
         regexp: '^#?listen_addresses\s*='
         line: "listen_addresses = '*'"
         backup: yes
@@ -17,7 +17,7 @@
 
     - name: Allow IPv4 remote connections in pg_hba.conf
       ansible.builtin.lineinfile:
-        path: /etc/postgresql/13/main/pg_hba.conf
+        path: /etc/postgresql/15/main/pg_hba.conf
         line: 'host    all             all             0.0.0.0/0               md5'
         state: present
         create: yes
@@ -26,7 +26,7 @@
 
     - name: Allow IPv6 remote connections in pg_hba.conf
       ansible.builtin.lineinfile:
-        path: /etc/postgresql/13/main/pg_hba.conf
+        path: /etc/postgresql/15/main/pg_hba.conf
         line: 'host    all             all             ::/0                    md5'
         state: present
         create: yes
