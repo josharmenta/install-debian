@@ -16,7 +16,7 @@
 
     - name: Template dbtool to /ctsms/dbtool.sh
       ansible.builtin.template:
-        src: templates/shell/dbtool.sh.j2
+        src: shell/dbtool.sh.j2
         dest: /ctsms/dbtool.sh
         owner: ctsms
         group: ctsms
@@ -24,7 +24,7 @@
 
     - name: Template clearcache to /ctsms/clearcache.sh
       ansible.builtin.template:
-        src: ./templates/bash/clearcache.sh.j2
+        src:  shell/clearcache.sh.j2
         dest: /ctsms/clearcache.sh
         owner: ctsms
         group: ctsms
@@ -40,7 +40,7 @@
 
     - name: Template dbtool to /ctsms/dbtool.sh
       ansible.builtin.template:
-        src: ./templates/bash/dbtool.sh.j2
+        src: bash/dbtool.sh.j2
         dest: /ctsms/dbtool.sh
         owner: ctsms
         group: ctsms
@@ -74,7 +74,7 @@
 
     - name: Template update to /ctsms/update
       ansible.builtin.template:
-        src: ./templates/update.j2
+        src: update.j2
         dest: /ctsms/update.sh
         owner: ctsms
         group: ctsms
