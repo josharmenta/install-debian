@@ -13,10 +13,114 @@
       name: libservlet3.1-java
       state: present
 
-  - name: Download and install tomcat9 .deb package
-    apt:
-      deb: http://www.mirbsd.org/~tg/Debs/dists/bookworm/wtf/Pkgs/tomcat9/tomcat9_9.0.91+dfsg-1_all.deb
-    become: true
+  - name: Create tomcat group
+    group:
+      name: tomcat
+      state: present
+
+  - name: Create tomcat user
+    user:
+      name: tomcat
+      group: tomcat
+      home: /opt/tomcat9
+      shell: /bin/false
+      system: yes
+      create_home: no
+
+  - name: Create Tomcat installation directory
+    file:
+      path: /opt/tomcat9
+      state: directory
+      owner: tomcat
+      group: tomcat
+      mode: '0755'
+
+  - name: Set Tomcat version
+    set_fact:
+      tomcat_version: 9.0.80
+
+  - name: Download Tomcat 9 archive
+    get_url:
+      url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+      dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+      mode: '0644'
+
+  - name: Extract Tomcat archive
+    unarchive:
+      src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+      dest: /opt/tomcat9
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+  - name: Change ownership of Tomcat directories
+    file:
+      path: "/opt/tomcat9/{{ item }}"
+      owner: tomcat
+      group: tomcat
+      recurse: yes
+    loop:
+      - logs
+      - temp
+      - webapps
+      - work
+
+  - name: Set group ownership for the rest of Tomcat files
+    file:
+      path: /opt/tomcat9
+      group: tomcat
+      recurse: yes
+
+  - name: Assign read permissions to conf directory
+    file:
+      path: /opt/tomcat9/conf
+      mode: '0750'
+      recurse: yes
+  - name: Set CATALINA_HOME environment variable
+    copy:
+      dest: /etc/profile.d/tomcat.sh
+      content: |
+        export CATALINA_HOME="/opt/tomcat9"
+        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+      mode: '0755'
+  - name: Create systemd service file for Tomcat
+    copy:
+      dest: /etc/systemd/system/tomcat.service
+      content: |
+        [Unit]
+        Description=Apache Tomcat Web Application Container
+        After=network.target
+
+        [Service]
+        Type=forking
+
+        Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+        Environment=CATALINA_PID=/opt/tomcat9/temp/tomcat.pid
+        Environment=CATALINA_HOME=/opt/tomcat9
+        Environment=CATALINA_BASE=/opt/tomcat9
+        Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+        Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+        ExecStart=/opt/tomcat9/bin/startup.sh
+        ExecStop=/opt/tomcat9/bin/shutdown.sh
+
+        User=tomcat
+        Group=tomcat
+        UMask=0007
+        RestartSec=10
+        Restart=always
+
+        [Install]
+        WantedBy=multi-user.target
+      mode: '0644'
+
+  - name: Reload systemd daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: Enable and start Tomcat service
+    systemd:
+      name: tomcat
+      enabled: yes
+      state: started
 
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
