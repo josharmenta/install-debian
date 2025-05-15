@@ -139,7 +139,7 @@
     - name: Extract bulk-processor archive
       ansible.builtin.unarchive:
         src: /ctsms/bulk-processor.tar.gz
-        dest: /ctsms/bulk_processor
+        dest: /ctsms/
         remote_src: true
         extra_opts:
           - --strip-components=1
