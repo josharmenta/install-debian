@@ -2,6 +2,11 @@
   gather_facts: true
   become: true
   hosts: all
+  vars:
+    XMS: "2048m"
+    XMX: "4096m"
+    XSS: "512k"
+    PERM: "256m"
   tasks:
   - name: install default OpenJDK
     ansible.builtin.apt:
