@@ -1,6 +1,7 @@
 - name: Prepare CTMS directory
   gather_facts: true
   hosts: all
+  become: true
   tasks:
     - name: Create /ctsms
       ansible.builtin.file:
