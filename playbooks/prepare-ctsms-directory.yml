@@ -32,7 +32,7 @@
 
     - name: Copy config-default to /ctsms/config-default/
       ansible.builtin.copy:
-        src: ./master-data/
+        src: ../config-default/
         dest: /ctsms/config-default/
         owner: ctsms
         group: ctsms
