@@ -183,7 +183,7 @@
 
   - name: Template ctsms.conf to /etc/tomcat9/server.xml
     ansible.builtin.template:
-      src: ./templates/tomcat/workers.j2
+      src: ../templates/tomcat/workers.j2
       dest: /etc/systemd/system/tomcat9.service.d/ctsms.conf
       owner: root
       group: tomcat
