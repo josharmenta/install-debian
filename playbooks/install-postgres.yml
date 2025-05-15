@@ -28,13 +28,14 @@
       notify: Restart PostgreSQL
 
     - name: install postgresql
-
       ansible.builtin.apt:
         name: postgresql
         state: present
       notify: Restart PostgreSQL
 
     - name: Create PostgreSQL user
+      become: true
+      become_user: postgres
       community.postgresql.postgresql_user:
         name: "{{ db_name }}"
         password: "{{ db_password }}"
