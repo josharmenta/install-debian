@@ -25,135 +25,83 @@
 
   tasks:
     - name: initialize db by inserting required setup records
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -i -f
+      shell: sudo -u ctsms /ctsms/dbtool.sh -i -f
 
     - name: import criterion properties tables
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
+      shell: sudo -u ctsms /ctsms/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
 
     - name:  import permission definitions from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv
 
     - name:  import inventory file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name:  import staff file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name:  import course file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name:  import trial file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name:  import proband file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import mass mail file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import input field image file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import input staff image file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import proband image file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import job data file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import course certificate file mime types from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1
 
     - name: import titles from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -it "{{ titles_file }}" -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -it "{{ titles_file }}" -e ISO-8859-1
 
     - name: import bank identifications from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ib "{{ bank_identification_file }}" -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ib "{{ bank_identification_file }}" -e ISO-8859-1
 
     - name: import country names from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ic "{{ countries_file }}" -e ISO-8859-1
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ic "{{ countries_file }}" -e ISO-8859-1
 
     - name: import zip codes from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -iz "{{ street_names_file }}" -e utf-8
+      shell: sudo -u ctsms /ctsms/dbtool.sh -iz "{{ street_names_file }}" -e utf-8
 
     - name: import street names from csv/text file
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -is "{{ street_names_file }}" -e utf-8
+      shell: sudo -u ctsms /ctsms/dbtool.sh -is "{{ street_names_file }}" -e utf-8
 
     - name: import icd systematics with language encoding
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -iis "{{ icd_systematics_file }}" -sl "{{ icd_systematics_lang }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -iis "{{ icd_systematics_file }}" -sl "{{ icd_systematics_lang }}"
 
     - name: import alpha ids
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -iai "{{ alpha_id_file }}" -e "{{ alpha_id_file_encoding }}" -isr "{{ alpha_id_file_revision }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -iai "{{ alpha_id_file }}" -e "{{ alpha_id_file_encoding }}" -isr "{{ alpha_id_file_revision }}"
 
     - name: import ops systematics
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ios "{{ ops_systematics_file }}" -sl "{{ ops_systematics_file_lang }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ios "{{ ops_systematics_file }}" -sl "{{ ops_systematics_file_lang }}"
 
     - name: import ops codes
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ioc "{{ ops_codes_file }}" -osr "{{ ops_codes_file_revisions }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ioc "{{ ops_codes_file }}" -osr "{{ ops_codes_file_revisions }}"
 
     - name: import asp and substances
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -ia "{{ asp_substances_file }}" -e "{{ asp_substances_file_encoding }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -ia "{{ asp_substances_file }}" -e "{{ asp_substances_file_encoding }}"
 
     - name: create department 'my_department'
-      become: yes
-      become_user: ctsms
-      shell: /ctsms/dbtool.sh -cd -dlk my_department -dp "{{ department_password }}"
+      shell: sudo -u ctsms /ctsms/dbtool.sh -cd -dlk my_department -dp "{{ department_password }}"
 
     - name: create user 'phoenix'
-      become: yes
-      become_user: ctsms
       shell: |
-         /ctsms/dbtool.sh -cu -dlk my_department
+         sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
          -dp "{{ department_password }}"
          -u "phoenix"
          -p "$USER_PASSWORD"
@@ -163,10 +111,8 @@
          TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
 
     - name: create user 'my_department_signup_de'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_de"
         -p "my_department_signup_de"
@@ -176,10 +122,8 @@
         OURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_en'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_en"
         -p "my_department_signup_en"
@@ -189,10 +133,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_da'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_da"
         -p "my_department_signup_da"
@@ -202,10 +144,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_es'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_es"
         -p "my_department_signup_es"
@@ -215,10 +155,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_fi'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_fi"
         -p "my_department_signup_fi"
@@ -228,10 +166,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_fr'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_fr"
         -p "my_department_signup_fr"
@@ -241,10 +177,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_hu'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_hu"
         -p "my_department_signup_hu"
@@ -254,10 +188,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_it'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_it"
         -p "my_department_signup_it"
@@ -267,10 +199,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ja'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ja"
         -p "my_department_signup_ja"
@@ -280,10 +210,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ko'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ko"
         -p "my_department_signup_ko"
@@ -293,10 +221,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_nl'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_nl"
         -p "my_department_signup_nl"
@@ -306,10 +232,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_pt'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_pt"
         -p "my_department_signup_pt"
@@ -319,10 +243,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ro'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ro"
         -p "my_department_signup_ro"
@@ -332,10 +254,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sk'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_sk"
         -p "my_department_signup_sk"
@@ -345,10 +265,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sl'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_sl"
         -p "my_department_signup_sl"
@@ -358,10 +276,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sv'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_sv"
         -p "my_department_signup_sv"
@@ -371,10 +287,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_uk'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_uk"
         -p "my_department_signup_uk"
@@ -384,10 +298,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ru'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ru"
         -p "my_department_signup_ru"
@@ -397,10 +309,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ln'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ln"
         -p "my_department_signup_ln"
@@ -410,10 +320,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sw'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_sw"
         -p "my_department_signup_sw"
@@ -423,10 +331,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_yo'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_yo"
         -p "my_department_signup_yo"
@@ -436,10 +342,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ig'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ig"
         -p "my_department_signup_ig"
@@ -449,10 +353,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ff'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ff"
         -p "my_department_signup_ff"
@@ -462,10 +364,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ar'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_ar"
         -p "my_department_signup_ar"
@@ -475,10 +375,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_kg'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_kg"
         -p "my_department_signup_kg"
@@ -488,10 +386,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_hi'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_hi"
         -p "my_department_signup_hi"
@@ -501,10 +397,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_zh'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_signup_zh"
         -p "my_department_signup_zh"
@@ -514,10 +408,8 @@
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_cron'
-      become: yes
-      become_user: ctsms
       shell: |
-        /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
         -dp "{{ department_password }}"
         -u "my_department_cron"
         -p "{{ cron_password }}"
@@ -561,7 +453,7 @@
 
     - name: Print department passphrase
       ansible.builtin.debug:
-        msg: "The department passphrase for 'my_department' when adding users with /ctsms/dbtool.sh is {{ department_password }}."
+        msg: "The department passphrase for 'my_department' when adding users with sudo -u ctsms /ctsms/dbtool.sh is {{ department_password }}."
 
     - name: Print login info
       ansible.builtin.debug:
