@@ -33,61 +33,61 @@
         state: present
       notify: Restart PostgreSQL
 
-    - name: Create PostgreSQL user
-      become: true
+---
+- name: Set up PostgreSQL database for CTSMS
+  hosts: dbserver  # Change to your target host group
+  become: true
+  vars:
+    db_user: ctsms
+    db_password: ctsms
+    db_name: ctsms
+    sql_dir: /ctsms/build/ctsms/core/db
+
+  tasks:
+    - name: Ensure PostgreSQL user exists
+      become_user: postgres
       community.postgresql.postgresql_user:
-        name: ctsms
+        name: "{{ db_user }}"
         password: "{{ db_password }}"
-        login: true
+        role_attr_flags: LOGIN
 
-    - name: Create PostgreSQL database with correct owner
-      become: true
+    - name: Create the CTSMS database
+      become_user: postgres
       community.postgresql.postgresql_db:
-        name: ctsms
-        owner: ctsms
-    - name: Grant all privileges on the database to the user
-      become: true
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
 
+    - name: Grant all privileges on the database
+      become_user: postgres
       community.postgresql.postgresql_privs:
-        db: ctsms
-        roles: ctsms
+        database: "{{ db_name }}"
+        roles: "{{ db_user }}"
         type: database
         privs: ALL
-        objs: ctsms
-        grant_option: no
-      notify: Restart PostgreSQL
 
-    - name: Run dbtool.sql as postgres
-      become: true
-      community.postgresql.postgresql_script:
-        db: "{{ db_name }}"
-        executable: psql
-        path: "{{ dbtool_sql_path }}"
-      notify: Restart PostgreSQL
+    - name: Import dbtool.sql as postgres
+      become_user: postgres
+      ansible.builtin.shell: psql {{ db_name }} < {{ sql_dir }}/dbtool.sql
+      args:
+        executable: /bin/bash
 
-    - name: Run schema-create.sql as ctsms
-      become: true
-      community.postgresql.postgresql_script:
-        db: "{{ db_name }}"
-        executable: psql
-        path: "{{ schema_create_sql_path }}"
-      notify: Restart PostgreSQL
+    - name: Import schema-create.sql as ctsms
+      become_user: "{{ db_user }}"
+      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/schema-create.sql
+      args:
+        executable: /bin/bash
 
-    - name: Run index-create.sql as ctsms
-      become: true
-      community.postgresql.postgresql_script:
-        db: "{{ db_name }}"
-        executable: psql
-        path: "{{ index_create_sql_path }}"
-      notify: Restart PostgreSQL
+    - name: Import index-create.sql as ctsms
+      become_user: "{{ db_user }}"
+      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/index-create.sql
+      args:
+        executable: /bin/bash
 
-    - name: Run schema-set-version.sql as ctsms
-      become: true
-      community.postgresql.postgresql_script:
-        db: "{{ db_name }}"
-        executable: psql
-        path: "{{ schema_set_version_sql_path }}"
-      notify: Restart PostgreSQL
+    - name: Import schema-set-version.sql as ctsms
+      become_user: "{{ db_user }}"
+      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/schema-set-version.sql
+      args:
+        executable: /bin/bash
 
 ###
 ### Any custom scripts needing to add to the database should be invoked here.
