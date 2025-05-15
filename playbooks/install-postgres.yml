@@ -21,6 +21,18 @@
         state: present
       notify: Restart PostgreSQL
 
+    - name: install python3-psycopg2 # Required for Ansible postgres operations
+      ansible.builtin.apt:
+        name: python3-psycopg2
+        state: present
+      notify: Restart PostgreSQL
+
+    - name: install psycopg2
+      ansible.builtin.apt:
+        name: postgresql
+        state: present
+      notify: Restart PostgreSQL
+
     - name: Create PostgreSQL user
       community.postgresql.postgresql_user:
         name: "{{ db_name }}"
