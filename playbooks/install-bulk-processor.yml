@@ -139,7 +139,7 @@
     - name: Create /ctsms/bulk_processor
       ansible.builtin.file:
         path: /ctsms/bulk_processor
-        state: present
+        state: directory
 
     - name: Extract bulk-processor archive
       ansible.builtin.unarchive:
