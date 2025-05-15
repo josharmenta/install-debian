@@ -1,4 +1,4 @@
-- name: Install Postgres 13
+- name: Enable Remote Access
   become: true
   hosts: all
   tasks:

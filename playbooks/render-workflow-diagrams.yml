@@ -1,4 +1,7 @@
 - name: Final configuration
+  gather_facts: true
+  hosts: all
+  become: true
   tasks:
     - name: Run render.sh
       ansible.builtin.command:

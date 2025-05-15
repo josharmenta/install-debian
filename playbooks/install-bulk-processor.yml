@@ -1,5 +1,6 @@
 - name: Install bulk-processor
   become: true
+  hosts: all
   vars:
     tag: "master"
     base_url: "https://github.com/phoenixctms"
