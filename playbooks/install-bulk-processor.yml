@@ -113,7 +113,7 @@
 
     - name: Install DateTime module from CPANM
       community.general.cpanm:
-        name: DateTime
+        name: DateTime::Format::Excel
         mode: compatibility
 
     - name: Install Spreadsheet::Reader::Format module from CPANM
