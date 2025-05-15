@@ -14,12 +14,6 @@
       state: latest
       update_cache: true
 
-  - name: Sync Time
-    ansible.builtin.service:
-      name: ntp
-      state: started
-      enabled: yes
-
   - name: Create 'ctsms' user
     ansible.builtin.user:
       name: ctsms
