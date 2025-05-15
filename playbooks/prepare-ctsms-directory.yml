@@ -2,6 +2,11 @@
   gather_facts: true
   hosts: all
   become: true
+  vars:
+    xms: "2048m"
+    xmx: "4096m"
+    xss: "512k"
+    perm: "256m"
   tasks:
     - name: Create /ctsms
       ansible.builtin.file:
