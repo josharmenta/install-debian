@@ -37,7 +37,7 @@
 
     - name: Write dbtool.sh
       ansible.builtin.copy:
-        dest: /ctsms.dbtool.sh
+        dest: /ctsms/dbtool.sh
         owner: ctsms
         group: ctsms
         mode: '0755'

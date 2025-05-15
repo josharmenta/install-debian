@@ -11,7 +11,7 @@
 
     - name: Remove /var/lib/tomcat9/webapps/ROOT/
       ansible.builtin.file:
-        path: /var/lib/tomcat9/webapps/ROOT/
+        path: /opt/tomcat9/webapps/ROOT/
         state: absent
 
     - name: Copy .war to Tomcat directory
