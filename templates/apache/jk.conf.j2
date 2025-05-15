@@ -1,3 +1,4 @@
+{% raw -%}
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -113,10 +114,11 @@
 
     # IMPORTANT: Mounts and virtual hosts
     # If you are using VirtualHost elements, you
-    # - can put mounts only used in some virtual host into its VirtualHost element 
+    # - can put mounts only used in some virtual host into its VirtualHost element
     # - can copy all global mounts to it using "JkMountCopy On" inside the VirtualHost
     # - can copy all global mounts to all virtual hosts by putting
     #   "JkMountCopy All" into the global server
     # Since: 1.2.26
 
 </IfModule>
+{%- endraw %}
