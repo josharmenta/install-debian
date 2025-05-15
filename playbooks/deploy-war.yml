@@ -1,6 +1,8 @@
 - name: Deploy .war
   become: true
   hosts: all
+  vars:
+    version: 1.8.1
   tasks:
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
