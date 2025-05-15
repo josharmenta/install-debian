@@ -146,7 +146,7 @@
       groups: tomcat,adm
       append: yes
 
-  - name: Template workers.properties to /etc/tomcat9/workers.properties
+  - name: Template workers.properties to /opt/tomcat9/workers.properties
     ansible.builtin.template:
       src: ../templates/tomcat/workers.properties.j2
       dest: /opt/tomcat9/workers.properties
@@ -154,7 +154,7 @@
       group: tomcat
       mode: '0640'
 
-  - name: Template server.xml to /etc/tomcat9/server.xml
+  - name: Template server.xml to /opt/tomcat9/server.xml
     ansible.builtin.template:
       src: ../templates/tomcat/server.xml.j2
       dest: /opt/tomcat9/server.xml

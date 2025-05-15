@@ -110,7 +110,7 @@
       community.general.cpanm:
         name:
           - Dancer
-          - DateTime::Format::Excel
+          - DateTime
           - Spreadsheet::Reader::Format
           - Spreadsheet::Reader::ExcelXML
         mode: compatibility
@@ -177,7 +177,7 @@
 
     - name: Template ecrfdataexport.sh to /ctsms/
       ansible.builtin.template:
-        src: ./templates/ecrfdataexport.j2
+        src: ../templates/shell/ecrfdataexport.j2
         dest: /ctsms/ecrfdataexport.sh
         owner: ctsms
         group: ctsms
@@ -185,7 +185,7 @@
 
     - name: Template ecrfdataeimport.sh to /ctsms/
       ansible.builtin.template:
-        src: ./templates/ecrfdataimport.j2
+        src: ../templates/shell/ecrfdataimport.j2
         dest: /ctsms/ecrfdataimport.sh
         owner: ctsms
         group: ctsms
@@ -193,7 +193,7 @@
 
     - name: Template inquirydataexport.sh to /ctsms/
       ansible.builtin.template:
-        src: ./templates/inquirydataexport.j2
+        src: ../templates/shell/inquirydataexport.j2
         dest: /ctsms/inquirydataexport.sh
         owner: ctsms
         group: ctsms
