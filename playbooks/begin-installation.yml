@@ -11,7 +11,6 @@
         - curl
         - lsb-release
         - gnupg
-        - ntpd
       state: latest
       update_cache: true
 
