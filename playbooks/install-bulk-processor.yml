@@ -136,10 +136,15 @@
         headers:
           Content-Disposition: "attachment"
 
+    - name: Create /ctsms/bulk_processor
+      ansible.builtin.file:
+        path: /ctsms/bulk_processor
+        state: present
+
     - name: Extract bulk-processor archive
       ansible.builtin.unarchive:
         src: /ctsms/bulk-processor.tar.gz
-        dest: /ctsms/
+        dest: /ctsms/bulk_processor
         remote_src: true
         extra_opts:
           - --strip-components=1
