@@ -1,7 +1,8 @@
 - name: Install Tomcat 9
+  gather_facts: true
   become: true
   hosts: all
-- tasks:
+  tasks:
   - name: install openjdk
     ansible.builtin.apt:
       name: openjdk
