@@ -106,13 +106,24 @@
           - threads
       when: ansible_os_family != "Debian"
 
-    - name: Install Perl modules from CPANM
+    - name: Install Dancer module from CPANM
       community.general.cpanm:
-        name:
-          - Dancer
-          - DateTime
-          - Spreadsheet::Reader::Format
-          - Spreadsheet::Reader::ExcelXML
+        name: Dancer
+        mode: compatibility
+
+    - name: Install DateTime module from CPANM
+      community.general.cpanm:
+        name: DateTime
+        mode: compatibility
+
+    - name: Install Spreadsheet::Reader::Format module from CPANM
+      community.general.cpanm:
+        name: Spreadsheet::Reader::Format
+        mode: compatibility
+
+    - name: Install Spreadsheet::Reader::ExcelXML module from CPANM
+      community.general.cpanm:
+        name: Spreadsheet::Reader::ExcelXML
         mode: compatibility
 
     - name: Download bulk-processor archive

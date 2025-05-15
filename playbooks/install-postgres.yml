@@ -57,10 +57,6 @@
     - name: Run schema-set-version.sql as ctsms
       shell: sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-set-version.sql
 
-###
-### Any custom scripts needing to add to the database should be invoked here.
-###
-
     - name: Set join_collapse_limit to 1 in postgresql.conf
       ansible.builtin.replace:
         path: /etc/postgresql/15/main/postgresql.conf
