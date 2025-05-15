@@ -22,32 +22,6 @@
         repo: 'https://github.com/phoenixctms/ctsms.git'
         dest: /ctsms/build/
 
-    # - name: Read application.version from pom.xml
-    #   command: grep -oP '<application.version>\K[^<]+' /ctsms/build/ctsms/pom.xml
-    #   register: app_version
-    #
-    # - name: Get short git commit hash
-    #   command: git rev-parse --short HEAD
-    #   args:
-    #     chdir: /ctsms/build/ctsms
-    #   register: git_commit
-    #
-    # - name: Generate a UUID
-    #   command: cat /proc/sys/kernel/random/uuid
-    #   register: uuid_output
-    #
-    # - name: Update application.version in pom.xml with commit hash
-    #   replace:
-    #     path: /ctsms/build/ctsms/pom.xml
-    #     regexp: '(<application.version>)[^<]+(</application.version>)'
-    #     replace: '\1{{ app_version.stdout }} [{{ git_commit.stdout }}]\2'
-    #
-    # - name: Update application.uuid tag with generated UUID
-    #   replace:
-    #     path: /ctsms/build/ctsms/pom.xml
-    #     regexp: '<application\.uuid></application\.uuid>'
-    #     replace: '<application.uuid>{{ uuid_output.stdout }}</application.uuid>'
-
     - name: Run mvn install with -DskipTests
       command: mvn install -DskipTests
       args:
