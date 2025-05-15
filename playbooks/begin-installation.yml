@@ -1,5 +1,6 @@
 - name: Install Phoenix CTMS v1.8.2
   gather_facts: true
+  become: true
   hosts: all
   tasks:
   - name: Install General Packages
