@@ -1,5 +1,6 @@
 - name: Build Phoenix CTMS
   become: true
+  hosts: all
   tasks:
     - name: install maven
       ansible.builtin.apt:

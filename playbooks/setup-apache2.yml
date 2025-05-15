@@ -3,6 +3,7 @@
   vars:
     certificate: "self-signed"
     cert_subject: "/C=AT/ST=Austria/L=Graz/O=phoenix/CN={{ ansible_hostname }}"
+  hosts: all
   tasks:
     - name: Install Apache and required modules
       ansible.builtin.apt:

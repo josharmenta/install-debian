@@ -1,6 +1,6 @@
 - name: Install Postgres 13
-  connection: local
   become: true
+  hosts: all
   tasks:
     - name: install ssh
       ansible.builtin.apt:

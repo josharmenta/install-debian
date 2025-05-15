@@ -1,5 +1,6 @@
 - name: Install Postgres 13
   become: true
+  hosts: all
   vars:
     db_name: ctsms
     db_password: ctsms

@@ -1,5 +1,6 @@
 - name: Deploy .war
   become: true
+  hosts: all
   tasks:
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
