@@ -74,7 +74,7 @@
 
     - name: Template update to /ctsms/update
       ansible.builtin.template:
-        src: update.j2
+        src: shell/update.j2
         dest: /ctsms/update.sh
         owner: ctsms
         group: ctsms
