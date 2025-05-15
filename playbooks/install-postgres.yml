@@ -33,50 +33,29 @@
         state: present
       notify: Restart PostgreSQL
 
-    - name: Ensure PostgreSQL user exists
-      become_user: postgres
-      community.postgresql.postgresql_user:
-        name: "{{ db_user }}"
-        password: "{{ db_password }}"
-        role_attr_flags: LOGIN
+    - name: Create PostgreSQL user ctsms
+      shell: sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 
-    - name: Create the CTSMS database
-      become_user: postgres
-      community.postgresql.postgresql_db:
-        name: "{{ db_name }}"
-        owner: "{{ db_user }}"
+    - name: Create database ctsms
+      shell: sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
 
-    - name: Grant all privileges on the database
-      become_user: postgres
-      community.postgresql.postgresql_privs:
-        database: "{{ db_name }}"
-        roles: "{{ db_user }}"
-        type: database
-        privs: ALL
+    - name: Grant privileges on ctsms database to ctsms user
+      shell: sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms TO ctsms;"
 
-    - name: Import dbtool.sql as postgres
-      become_user: postgres
-      ansible.builtin.shell: psql {{ db_name }} < {{ sql_dir }}/dbtool.sql
-      args:
-        executable: /bin/bash
+    - name: Change owner of ctsms database to ctsms user
+      shell: sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
 
-    - name: Import schema-create.sql as ctsms
-      become_user: "{{ db_user }}"
-      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/schema-create.sql
-      args:
-        executable: /bin/bash
+    - name: Run dbtool.sql as postgres
+      shell: sudo -u postgres psql ctsms < /ctsms/build/ctsms/core/db/dbtool.sql
 
-    - name: Import index-create.sql as ctsms
-      become_user: "{{ db_user }}"
-      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/index-create.sql
-      args:
-        executable: /bin/bash
+    - name: Run schema-create.sql as ctsms
+      shell: sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-create.sql
 
-    - name: Import schema-set-version.sql as ctsms
-      become_user: "{{ db_user }}"
-      ansible.builtin.shell: psql -U {{ db_user }} {{ db_name }} < {{ sql_dir }}/schema-set-version.sql
-      args:
-        executable: /bin/bash
+    - name: Run index-create.sql as ctsms
+      shell: sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/index-create.sql
+
+    - name: Run schema-set-version.sql as ctsms
+      shell: sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-set-version.sql
 
 ###
 ### Any custom scripts needing to add to the database should be invoked here.
