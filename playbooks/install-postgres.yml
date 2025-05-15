@@ -35,7 +35,7 @@
 
     - name: Create PostgreSQL user
       become: true
-      become_user: postgres
+
       community.postgresql.postgresql_user:
         name: ctsms
         password: "{{ db_password }}"
@@ -43,14 +43,14 @@
 
     - name: Create PostgreSQL database with correct owner
       become: true
-      become_user: postgres
+
       community.postgresql.postgresql_db:
         name: ctsms
         owner: ctsms
 
     - name: Grant all privileges on the database to the user
       become: true
-      become_user: postgres
+
       community.postgresql.postgresql_privs:
         db: ctsms
         roles: ctsms
@@ -62,7 +62,7 @@
 
     - name: Run dbtool.sql as postgres
       become: true
-      become_user: postgres
+
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
@@ -71,7 +71,7 @@
 
     - name: Run schema-create.sql as ctsms
       become: true
-      become_user: postgres
+
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
@@ -80,7 +80,6 @@
 
     - name: Run index-create.sql as ctsms
       become: true
-      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
@@ -89,7 +88,6 @@
 
     - name: Run schema-set-version.sql as ctsms
       become: true
-      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
         executable: psql
