@@ -37,7 +37,7 @@
 
   - name: Set Tomcat version
     set_fact:
-      tomcat_version: 9.0.80
+      tomcat_version: 9.0.105
 
   - name: Download Tomcat 9 archive
     get_url:
