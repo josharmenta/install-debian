@@ -2,7 +2,7 @@
   become: true
   hosts: all
   vars:
-    db_name: ctsms
+    db_user: ctsms
     db_password: ctsms
     dbtool_sql_path: /ctsms/build/ctsms/core/db/dbtool.sql
     schema_create_sql_path: /ctsms/build/ctsms/core/db/schema-create.sql
