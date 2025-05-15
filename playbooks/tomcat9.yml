@@ -3,9 +3,9 @@
   become: true
   hosts: all
   tasks:
-  - name: install openjdk
+  - name: install default OpenJDK
     ansible.builtin.apt:
-      name: openjdk
+      name: default-jdk
       state: present
 
   - name: install libservlet3.1-java
