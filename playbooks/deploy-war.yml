@@ -9,7 +9,7 @@
         path: /ctsms/build/ctsms/web/target/ctsms-{{ version }}.war
         mode: '0755'
 
-    - name: Remove /var/lib/tomcat9/webapps/ROOT/
+    - name: Remove /opt/tomcat9/webapps/ROOT/
       ansible.builtin.file:
         path: /opt/tomcat9/webapps/ROOT/
         state: absent

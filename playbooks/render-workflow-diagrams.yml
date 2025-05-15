@@ -25,13 +25,13 @@
 
     - name: Remove exploded ROOT webapp
       ansible.builtin.file:
-        path: /var/lib/tomcat9/webapps/ROOT
+        path: /opt/tomcat9/webapps/ROOT
         state: absent
 
     - name: Copy WAR file to Tomcat ROOT.war
       ansible.builtin.copy:
         src: "/ctsms/build/ctsms/web/target/ctsms-{{ version }}.war"
-        dest: /var/lib/tomcat9/webapps/ROOT.war
+        dest: /opt/tomcat9/webapps/ROOT.war
         mode: '0644'
         remote_src: true
 

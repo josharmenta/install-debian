@@ -40,15 +40,15 @@
 
     SetEnvIf Request_URI "/static/*" no-jk
     SetEnvIf Request_URI "/signup/*" no-jk
-    Alias /resources /var/lib/tomcat9/webapps/ROOT/resources
-    <Directory "/var/lib/tomcat9/webapps/ROOT/resources">
+    Alias /resources /opt/tomcat9/webapps/ROOT/resources
+    <Directory "/opt/tomcat9/webapps/ROOT/resources">
         #Options FollowSymLinks
         #allow from all
         AllowOverride None
         Require all granted
     </Directory>
-    Alias / /var/lib/tomcat9/webapps/ROOT/
-    <Directory "/var/lib/tomcat9/webapps/ROOT">
+    Alias / /opt/tomcat9/webapps/ROOT/
+    <Directory "/opt/tomcat9/webapps/ROOT">
         #Options FollowSymLinks
         #allow from all
         AllowOverride None
@@ -60,7 +60,7 @@
         deny from all
     </Location>
 
-    DocumentRoot /var/lib/tomcat9/webapps/ROOT
+    DocumentRoot /opt/tomcat9/webapps/ROOT
     JkMount /*.jsf ajp13
     JkMount /rest/* ajp13
     JkMount /inputfieldimage ajp13

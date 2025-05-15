@@ -99,8 +99,8 @@ sudo -u ctsms psql -U ctsms ctsms < /ctsms/build/ctsms/core/db/schema-up-$TAG.sq
 
 ###deploy .war
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
-rm /var/lib/tomcat9/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+rm /opt/tomcat9/webapps/ROOT/ -rf
+cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /opt/tomcat9/webapps/ROOT.war
 systemctl start tomcat9
 
 ###update bulk-processor
@@ -134,8 +134,8 @@ cd /ctsms/build/ctsms
 mvn -f web/pom.xml -Dmaven.test.skip=true
 chmod 755 /ctsms/build/ctsms/web/target/ctsms-$VERSION.war
 systemctl stop tomcat9
-rm /var/lib/tomcat9/webapps/ROOT/ -rf
-cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+rm /opt/tomcat9/webapps/ROOT/ -rf
+cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /opt/tomcat9/webapps/ROOT.war
 
 ###setup cron
 chmod +rwx /ctsms/install/install_cron.sh
