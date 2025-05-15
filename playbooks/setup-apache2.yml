@@ -89,8 +89,8 @@
       ansible.builtin.command: a2ensite 00_ctsms_https.conf
       notify: Reload Apache
 
-    # Handler to reload Apache
-    - handler: Reload Apache
+  handlers:
+    - name: Reload Apache
       ansible.builtin.service:
         name: apache2
-        state: reloaded
+        state: restarted
