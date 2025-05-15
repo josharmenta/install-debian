@@ -28,6 +28,7 @@
       notify: Restart PostgreSQL
 
     - name: install postgresql
+
       ansible.builtin.apt:
         name: postgresql
         state: present
@@ -37,17 +38,19 @@
       community.postgresql.postgresql_user:
         name: "{{ db_name }}"
         password: "{{ db_password }}"
-        login_user: postgres
       notify: Restart PostgreSQL
 
     - name: Create PostgreSQL database with correct owner
+      become: true
+      become_user: postgres
       community.postgresql.postgresql_db:
         name: ctsms
         owner: ctsms
-        login_user: postgres
       notify: Restart PostgreSQL
 
     - name: Grant all privileges on the database to the user
+      become: true
+      become_user: postgres
       community.postgresql.postgresql_privs:
         db: ctsms
         roles: ctsms
@@ -55,38 +58,40 @@
         privs: ALL
         objs: ctsms
         grant_option: no
-        login_user: postgres
       notify: Restart PostgreSQL
 
     - name: Run dbtool.sql as postgres
+      become: true
+      become_user: postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
-        become: true
-        become_user: postgres
         executable: psql
         path: "{{ dbtool_sql_path }}"
       notify: Restart PostgreSQL
 
     - name: Run schema-create.sql as ctsms
+      become: true
+      become_user: ctsms
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
-        login_user: ctsms
         executable: psql
         path: "{{ schema_create_sql_path }}"
       notify: Restart PostgreSQL
 
     - name: Run index-create.sql as ctsms
+      become: true
+      become_user: ctsms
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
-        login_user: ctsms
         executable: psql
         path: "{{ index_create_sql_path }}"
       notify: Restart PostgreSQL
 
     - name: Run schema-set-version.sql as ctsms
+      become: true
+      become_user: ctsms
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
-        login_user: ctsms
         executable: psql
         path: "{{ schema_set_version_sql_path }}"
       notify: Restart PostgreSQL
