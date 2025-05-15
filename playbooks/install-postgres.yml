@@ -33,17 +33,6 @@
         state: present
       notify: Restart PostgreSQL
 
----
-- name: Set up PostgreSQL database for CTSMS
-  hosts: dbserver  # Change to your target host group
-  become: true
-  vars:
-    db_user: ctsms
-    db_password: ctsms
-    db_name: ctsms
-    sql_dir: /ctsms/build/ctsms/core/db
-
-  tasks:
     - name: Ensure PostgreSQL user exists
       become_user: postgres
       community.postgresql.postgresql_user:
