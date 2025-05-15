@@ -27,7 +27,7 @@
         state: present
       notify: Restart PostgreSQL
 
-    - name: install psycopg2
+    - name: install postgresql
       ansible.builtin.apt:
         name: postgresql
         state: present
@@ -61,7 +61,8 @@
     - name: Run dbtool.sql as postgres
       community.postgresql.postgresql_script:
         db: "{{ db_name }}"
-        login_user: postgres
+        become: true
+        become_user: postgres
         executable: psql
         path: "{{ dbtool_sql_path }}"
       notify: Restart PostgreSQL
