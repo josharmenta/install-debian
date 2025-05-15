@@ -37,9 +37,9 @@
       become: true
       become_user: postgres
       community.postgresql.postgresql_user:
-        name: "{{ db_name }}"
+        name: ctsms
         password: "{{ db_password }}"
-      notify: Restart PostgreSQL
+        login: true
 
     - name: Create PostgreSQL database with correct owner
       become: true
@@ -47,7 +47,6 @@
       community.postgresql.postgresql_db:
         name: ctsms
         owner: ctsms
-      notify: Restart PostgreSQL
 
     - name: Grant all privileges on the database to the user
       become: true
