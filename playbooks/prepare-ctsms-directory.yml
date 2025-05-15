@@ -48,7 +48,7 @@
 
     - name: Copy master-data to /ctsms/master_data/
       ansible.builtin.copy:
-        src: ./master-data/
+        src: ../master-data/
         dest: /ctsms/master_data/
         owner: ctsms
         group: ctsms
