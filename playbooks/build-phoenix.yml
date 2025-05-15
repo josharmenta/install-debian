@@ -29,13 +29,13 @@
       register: mvn_install
       changed_when: "'BUILD SUCCESS' in mvn_install.stdout"
 
-    - name: Retry mvn install if .war file was not created
-      command: mvn install -DskipTests
-      args:
-        chdir: /ctsms/build/ctsms
-      when: not war_file.stat.exists
-      register: mvn_retry
-      changed_when: "'BUILD SUCCESS' in mvn_retry.stdout"
+    # - name: Retry mvn install if .war file was not created
+    #   command: mvn install -DskipTests
+    #   args:
+    #     chdir: /ctsms/build/ctsms
+    #   when: not war_file.stat.exists
+    #   register: mvn_retry
+    #   changed_when: "'BUILD SUCCESS' in mvn_retry.stdout"
 
     - name: Run andromdapp-maven-plugin (create schema)
       command: >
