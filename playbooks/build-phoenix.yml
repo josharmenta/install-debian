@@ -20,7 +20,7 @@
     - name: Clone Phoenix repository
       ansible.builtin.git:
         repo: 'https://github.com/phoenixctms/ctsms.git'
-        dest: /ctsms/build/
+        dest: /ctsms/build/ctsms
 
     - name: Run mvn install with -DskipTests
       command: mvn install -DskipTests
