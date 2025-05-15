@@ -8,6 +8,7 @@
 # - import_playbook: playbooks/install-memcached.yml
 - import_playbook: playbooks/install-bulk-processor.yml
 - import_playbook: playbooks/setup-apache2.yml
+- import_playbook: playbooks/init-database.yml
 - import_playbook: playbooks/install-cron.yml
 - import_playbook: playbooks/setup-logrotate.yml
 - import_playbook: playbooks/render-workflow-diagrams.yml

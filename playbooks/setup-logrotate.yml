@@ -1,4 +1,6 @@
 - name: Setup logrotate
+  become: true
+  hosts: all
   tasks:
     - name: Setup logrotate
       ansible.builtin.template:
