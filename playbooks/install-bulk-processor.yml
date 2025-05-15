@@ -152,7 +152,7 @@
     - name: Run minify.pl on Signup folder
       ansible.builtin.command:
         cmd: |
-          perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl
+          perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl \
           --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 
     - name: Create /ctsms/bulk_processor/output directory
