@@ -90,7 +90,7 @@
       notify: Reload Apache
 
     # Handler to reload Apache
-    - name: Reload Apache
+    - handler: Reload Apache
       ansible.builtin.service:
         name: apache2
         state: reloaded
