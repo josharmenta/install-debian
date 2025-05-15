@@ -17,5 +17,5 @@
     - name: Copy .war to Tomcat directory
       ansible.builtin.copy:
         src: /ctsms/build/ctsms/web/target/ctsms-{{ version }}.war
-        dest: /var/lib/tomcat9/webapps/ROOT.war
+        dest: /opt/tomcat9/webapps/ROOT.war
         mode: '0755'
