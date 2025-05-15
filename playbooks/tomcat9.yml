@@ -142,7 +142,7 @@
   - name: Template workers.properties to /etc/tomcat9/workers.properties
     ansible.builtin.template:
       src: ../templates/tomcat/workers.properties.j2
-      dest: /etc/tomcat9/workers.properties
+      dest: /opt/tomcat9/workers.properties
       owner: root
       group: tomcat
       mode: '0640'
@@ -150,7 +150,7 @@
   - name: Template server.xml to /etc/tomcat9/server.xml
     ansible.builtin.template:
       src: ../templates/tomcat/server.xml.j2
-      dest: /etc/tomcat9/server.xml
+      dest: /opt/tomcat9/server.xml
       owner: root
       group: tomcat
       mode: '0640'
