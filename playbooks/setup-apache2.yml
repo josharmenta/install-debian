@@ -15,20 +15,6 @@
         update_cache: true
       notify: Reload Apache
 
-    - name: Append ctsms group to user tomcat
-      ansible.builtin.user:
-        name: tomcat
-        groups: ctsms
-        append: true
-      notify: Reload Apache
-
-    - name: Append ctsms group to user tomcat
-      ansible.builtin.user:
-        name: tomcat,adm
-        groups: ctsms
-        append: true
-      notify: Reload Apache
-
     - name: Template 00_ctsms_http.conf to /etc/apache2/sites-available/
       ansible.builtin.template:
         src: ../templates/apache/00_ctsms_http.conf.j2
