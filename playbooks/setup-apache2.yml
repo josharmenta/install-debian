@@ -15,6 +15,9 @@
         update_cache: true
       notify: Reload Apache
 
+    - name: Run usermod
+      cmd: usermod --append --groups tomcat,ctsms www-data
+
     - name: Template 00_ctsms_http.conf to /etc/apache2/sites-available/
       ansible.builtin.template:
         src: ../templates/apache/00_ctsms_http.conf.j2
