@@ -37,6 +37,12 @@
       system: yes
       create_home: no
 
+  - name: Run usermod
+    command: usermod --append --groups ctsms tomcat
+
+  - name: Run usermod
+    command: usermod --append --groups tomcat,adm ctsms
+
   - name: Create Tomcat installation directory
     file:
       path: /opt/tomcat9

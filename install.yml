@@ -1,12 +1,12 @@
-# - import_playbook: playbooks/begin-installation.yml
-# - import_playbook: playbooks/prepare-ctsms-directory.yml
-# - import_playbook: playbooks/tomcat9.yml
-# - import_playbook: playbooks/build-phoenix.yml
-# - import_playbook: playbooks/install-postgres.yml
-# # - import_playbook: playbooks/enable-remote-access.yml
-# - import_playbook: playbooks/deploy-war.yml
-# - import_playbook: playbooks/install-memcached.yml
-# - import_playbook: playbooks/install-bulk-processor.yml
+- import_playbook: playbooks/begin-installation.yml
+- import_playbook: playbooks/prepare-ctsms-directory.yml
+- import_playbook: playbooks/tomcat9.yml
+- import_playbook: playbooks/build-phoenix.yml
+- import_playbook: playbooks/install-postgres.yml
+# - import_playbook: playbooks/enable-remote-access.yml
+- import_playbook: playbooks/deploy-war.yml
+- import_playbook: playbooks/install-memcached.yml
+- import_playbook: playbooks/install-bulk-processor.yml
 - import_playbook: playbooks/setup-apache2.yml
 - import_playbook: playbooks/init-database.yml
 - import_playbook: playbooks/install-cron.yml
