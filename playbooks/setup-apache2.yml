@@ -68,7 +68,9 @@
       ansible.builtin.file:
         path: /etc/apache2/ssl
         state: directory
-        mode: '0755'
+        mode: '0600'
+        owner: root
+        group: root
 
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
