@@ -64,6 +64,12 @@
       ansible.builtin.command: a2enmod rewrite
       notify: Reload Apache
 
+    - name: Create SSL directory
+      ansible.builtin.file:
+        path: /etc/apache2/ssl
+        state: directory
+        mode: '0755'
+
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
         path: /etc/apache2/ssl/apache.key
