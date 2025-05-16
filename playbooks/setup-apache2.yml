@@ -15,12 +15,17 @@
         update_cache: true
       notify: Reload Apache
 
-    - name: Add www-data to tomcat and ctsms groups
+    - name: Append ctsms group to user tomcat
       ansible.builtin.user:
-        name: www-data
-        groups:
-          - tomcat
-          - ctsms
+        name: tomcat
+        groups: ctsms
+        append: true
+      notify: Reload Apache
+
+    - name: Append ctsms group to user tomcat
+      ansible.builtin.user:
+        name: tomcat,adm
+        groups: ctsms
         append: true
       notify: Reload Apache
 
