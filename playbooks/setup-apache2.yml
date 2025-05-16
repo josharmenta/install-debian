@@ -64,26 +64,15 @@
       ansible.builtin.command: a2enmod rewrite
       notify: Reload Apache
 
-    - name: Create SSL directory
-      ansible.builtin.file:
-        path: /etc/apache2/ssl
-        state: directory
-        mode: '0755'
+    - name: Create private key (RSA, 4096 bits)
+      community.crypto.openssl_privatekey:
+        path: /etc/apache2/ssl/apache.key
 
-    - name: Generate self-signed SSL certificate (only if certificate == 'self-signed')
-      ansible.builtin.command: >
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048
-        -keyout /etc/apache2/ssl/apache.key
-        -subj "{{ cert_subject }}"
-        -out /etc/apache2/ssl/apache.crt
-      when: certificate == "self-signed"
-      notify: Reload Apache
-
-    - name: Set permissions on SSL key and cert
-      ansible.builtin.file:
-        path: /etc/apache2/ssl
-        mode: '0600'
-        recurse: true
+    - name: Create simple self-signed certificate
+      community.crypto.x509_certificate:
+        path: /etc/apache2/ssl/certificate.pem
+        privatekey_path: /etc/apache2/ssl/apache.key
+        provider: selfsigned
 
     - name: Enable 00_ctsms_https.conf site
       ansible.builtin.command: a2ensite 00_ctsms_https.conf
