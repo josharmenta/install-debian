@@ -3,20 +3,20 @@
   hosts: all
   gather_facts: yes
   vars:
-    titles_file: /ctsms/master_data/titles.csv
-    bank_identification_file: /ctsms/master_data/kiverzeichnis_gesamt_de_1347893202433.csv
-    countries_file: /ctsms/master_data/countries.txt
-    street_names_file: /ctsms/master_data/streetnames.csv
-    icd_systematics_file: /ctsms/master_data/icd10gm2012syst_claml_20110923.xml
+    titles_file: "/ctsms/master_data/titles.csv"
+    bank_identification_file: "/ctsms/master_data/kiverzeichnis_gesamt_de_1347893202433.csv"
+    countries_file: "/ctsms/master_data/countries.txt"
+    street_names_file: "/ctsms/master_data/streetnames.csv"
+    icd_systematics_file: "/ctsms/master_data/icd10gm2012syst_claml_20110923.xml"
     icd_systematics_lang: "de"
-    alpha_id_file: /ctsms/master_data/icd10gm2012_alphaid_edv_ascii_20110930.txt
+    alpha_id_file: "/ctsms/master_data/icd10gm2012_alphaid_edv_ascii_20110930.txt"
     alpha_id_file_encoding: "ISO-8859-1"
     alpha_id_file_revision: "icd10gm2012syst_claml_20110923"
-    ops_systematics_file: /ctsms/master_data/ops2012syst_claml_20111103.xml
+    ops_systematics_file: "/ctsms/master_data/ops2012syst_claml_20111103.xml"
     ops_systematics_file_lang: "de"
-    ops_codes_file: /ctsms/master_data/ops2011alpha_edv_ascii_20111031.txt
+    ops_codes_file: "/ctsms/master_data/ops2011alpha_edv_ascii_20111031.txt"
     ops_codes_file_revisions: "ops2012syst_claml_20111103"
-    asp_substances_file: /ctsms/master_data/asp_register_20240316.xls
+    asp_substances_file: "/ctsms/master_data/asp_register_20240316.xls"
     asp_substances_file_encoding: "Cp1252"
     department_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
     user_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
