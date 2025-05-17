@@ -12,6 +12,7 @@
         - lsb-release
         - gnupg
         - ntp
+        - rsync
       state: latest
       update_cache: true
 
