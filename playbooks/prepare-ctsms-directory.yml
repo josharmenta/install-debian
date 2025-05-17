@@ -31,9 +31,6 @@
       ansible.posix.synchronize:
         src: "{{ playbook_dir }}/../config-default/"
         dest: /ctsms/config-default/
-        owner: ctsms
-        group: ctsms
-        mode: '0755'
       delegate_to: "{{ inventory_hostname }}"
 
     - name: Write dbtool.sh
@@ -53,9 +50,6 @@
       ansible.posix.synchronize:
         src: "{{ playbook_dir }}/../master-data/"
         dest: /ctsms/master_data/
-        owner: ctsms
-        group: ctsms
-        mode: '0755'
       delegate_to: "{{ inventory_hostname }}"
 
     - name: Recursively change ownership of /ctsms/
