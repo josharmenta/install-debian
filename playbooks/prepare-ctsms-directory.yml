@@ -29,7 +29,7 @@
 
     - name: Copy config-default to /ctsms/config-default/
       ansible.builtin.copy:
-        src: ../config-default/
+        src: "{{ playbook_dir }}/../config-default/"
         dest: /ctsms/config-default/
         owner: ctsms
         group: ctsms
@@ -50,7 +50,7 @@
 
     - name: Copy master-data to /ctsms/master_data/
       ansible.builtin.copy:
-        src: ../master-data/
+        src: "{{ playbook_dir }}/../master-data/"
         dest: /ctsms/master_data/
         owner: ctsms
         group: ctsms
