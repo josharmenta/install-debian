@@ -28,12 +28,13 @@
         mode: '0755'
 
     - name: Copy config-default to /ctsms/config-default/
-      ansible.builtin.copy:
+      ansible.builtin.synchronize:
         src: "{{ playbook_dir }}/../config-default/"
         dest: /ctsms/config-default/
         owner: ctsms
         group: ctsms
         mode: '0755'
+      delegate_to: "{{ inventory_hostname }}"
 
     - name: Write dbtool.sh
       ansible.builtin.copy:
@@ -49,12 +50,13 @@
           java -DCTSMS_PROPERTIES="$CTSMS_PROPERTIES" -DCTSMS_JAVA="$CTSMS_JAVA" -Dfile.encoding=Cp1252 -Djava.awt.headless=true --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED -Xms{{ xms }} -Xmx{{ xmx }} -Xss{{ xss }} -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:ReservedCodeCacheSize={{ perm }} -classpath $CATALINA_BASE/webapps/ROOT/WEB-INF/lib/ctsms-core-1.8.1.jar:$CATALINA_BASE/webapps/ROOT/WEB-INF/lib/* org.phoenixctms.ctsms.executable.DBTool $*
 
     - name: Copy master-data to /ctsms/master_data/
-      ansible.builtin.copy:
+      ansible.builtin.synchroize:
         src: "{{ playbook_dir }}/../master-data/"
         dest: /ctsms/master_data/
         owner: ctsms
         group: ctsms
         mode: '0755'
+      delegate_to: "{{ inventory_hostname }}"
 
     - name: Recursively change ownership of /ctsms/
       ansible.builtin.file:
