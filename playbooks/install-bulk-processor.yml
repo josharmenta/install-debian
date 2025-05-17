@@ -9,7 +9,6 @@
     dest_dir: "/ctsms/bulk_processor"
     output_dir: "{{ dest_dir }}/output"
     user_group: "ctsms"
-  hosts: all
   tasks:
     - name: Install Perl libraries and utilities
       ansible.builtin.apt:
