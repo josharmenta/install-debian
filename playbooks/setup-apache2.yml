@@ -73,12 +73,8 @@
     - name: Create certificate signing request (CSR) for self-signed certificate
       community.crypto.openssl_csr_pipe:
         privatekey_path: /etc/apache2/ssl/apache.key
-        common_name: "{{ ansible_hostname }}"
-        organization_name: "{{ organization }}"
-        subject_alt_name:
-          - "DNS:ansible.com"
-          - "DNS:www.ansible.com"
-          - "DNS:docs.ansible.com"
+        common_name: localhost
+        organization_name: localhost
       register: csr
 
     - name: Create self-signed certificate from CSR
