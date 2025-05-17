@@ -76,11 +76,8 @@
         privatekey_path: /etc/apache2/ssl/apache.key
         provider: selfsigned
         subject:
-          common_name: "{{ ansible_fqdn }}"
-        subject_alt_name:
-          - "DNS:{{ ansible_fqdn }}"
-          - "DNS:{{ ansible_hostname }}"
-          
+          common_name: "{{ ansible_hostname }}"
+
     - name: Enable 00_ctsms_https.conf site
       ansible.builtin.command: a2ensite 00_ctsms_https.conf
       notify: Reload Apache
