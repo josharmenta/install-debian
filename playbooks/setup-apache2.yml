@@ -3,6 +3,7 @@
   vars:
     certificate: "self-signed"
     cert_subject: "/C=AT/ST=Austria/L=Graz/O=phoenix/CN={{ ansible_hostname }}"
+    organization: none
   hosts: all
   tasks:
     - name: Install Apache and required modules
@@ -69,6 +70,24 @@
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
         path: /etc/apache2/ssl/apache.key
+
+    - name: Create certificate signing request (CSR) for self-signed certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: /path/to/certificate.key
+        common_name: {{ ansible_hostname }}
+        organization_name: {{ organization }}
+        subject_alt_name:
+          - "DNS:ansible.com"
+          - "DNS:www.ansible.com"
+          - "DNS:docs.ansible.com"
+      register: csr
+
+    - name: Create self-signed certificate from CSR
+      community.crypto.x509_certificate:
+        path: /path/to/certificate.pem
+        csr_content: "{{ csr.csr }}"
+        privatekey_path: /path/to/certificate.key
+        provider: selfsigned
 
     - name: Create simple self-signed certificate
       community.crypto.x509_certificate:
