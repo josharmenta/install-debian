@@ -103,8 +103,8 @@
       shell: |
          sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
          -dp "{{ department_password }}"
-         -u "phoenix"nano
-         -p "$USER_PASSWORD"
+         -u "phoenix"
+         -p "{{ user_password }}"
          -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,
          TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,
          MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,

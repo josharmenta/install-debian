@@ -4,7 +4,7 @@
   tasks:
     - name: Setup logrotate
       ansible.builtin.template:
-        src: ./templates/logrotate/ctsms.j2
+        src: ../templates/logrotate/ctsms.j2
         dest: /etc/logrotate.d/ctsms
         owner: root
         group: wheel
