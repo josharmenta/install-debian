@@ -101,57 +101,57 @@
 
     - name: create user 'phoenix'
       shell: |
-         sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-         -dp "{{ department_password }}"
-         -u "phoenix"
-         -p "{{ user_password }}"
-         -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,
-         TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,
-         MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,
+         sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+         -dp "{{ department_password }}" \
+         -u "phoenix" \
+         -p "{{ user_password }}" \
+         -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS, \
+         TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER, \
+         MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH, \
          TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
 
     - name: create user 'my_department_signup_de'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_de"
-        -p "my_department_signup_de"
-        -ul de
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_de" \
+        -p "my_department_signup_de" \
+        -ul de \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         OURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_en'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_en"
-        -p "my_department_signup_en"
-        -ul en
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_en" \
+        -p "my_department_signup_en" \
+        -ul en \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_da'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_da"
-        -p "my_department_signup_da"
-        -ul da
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_da" \
+        -p "my_department_signup_da" \
+        -ul da \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_es'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_es"
-        -p "my_department_signup_es"
-        -ul es
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_es" \
+        -p "my_department_signup_es" \
+        -ul es \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_fi'
@@ -167,112 +167,112 @@
 
     - name: create user 'my_department_signup_fr'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_fr"
-        -p "my_department_signup_fr"
-        -ul fr
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_fr" \
+        -p "my_department_signup_fr" \
+        -ul fr \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_hu'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_hu"
-        -p "my_department_signup_hu"
-        -ul hu
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_hu" \
+        -p "my_department_signup_hu" \
+        -ul hu \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_it'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_it"
-        -p "my_department_signup_it"
-        -ul it
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_it" \
+        -p "my_department_signup_it" \
+        -ul it \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ja'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_ja"
-        -p "my_department_signup_ja"
-        -ul ja
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_ja" \
+        -p "my_department_signup_ja" \
+        -ul ja \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ko'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_ko"
-        -p "my_department_signup_ko"
-        -ul ko
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_ko" \
+        -p "my_department_signup_ko" \
+        -ul ko \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_nl'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_nl"
-        -p "my_department_signup_nl"
-        -ul nl
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_nl" \
+        -p "my_department_signup_nl" \
+        -ul nl \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_pt'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_pt"
-        -p "my_department_signup_pt"
-        -ul pt
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_pt" \
+        -p "my_department_signup_pt" \
+        -ul pt \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_ro'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_ro"
-        -p "my_department_signup_ro"
-        -ul ro
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
-        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_ro" \
+        -p "my_department_signup_ro" \
+        -ul ro \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
+        COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH" \
 
     - name: create user 'my_department_signup_sk'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_sk"
-        -p "my_department_signup_sk"
-        -ul sk
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_sk" \
+        -p "my_department_signup_sk" \
+        -ul sk \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sl'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_signup_sl"
-        -p "my_department_signup_sl"
-        -ul sl
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_signup_sl" \
+        -p "my_department_signup_sl" \
+        -ul sl \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_signup_sv'
@@ -398,24 +398,24 @@
 
     - name: create user 'my_department_signup_zh'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
         -dp "{{ department_password }}"
-        -u "my_department_signup_zh"
-        -p "my_department_signup_zh"
-        -ul yo
-        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,
-        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,
+        -u "my_department_signup_zh" \
+        -p "my_department_signup_zh" \
+        -ul zh \
+        -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP, \
+        PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH, \
         COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
 
     - name: create user 'my_department_cron'
       shell: |
-        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department
-        -dp "{{ department_password }}"
-        -u "my_department_cron"
-        -p "{{ cron_password }}"
-        -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,
-        TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,
-        MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,
+        sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department \
+        -dp "{{ department_password }}" \
+        -u "my_department_cron" \
+        -p "{{ cron_password }}" \
+        -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS, \
+        TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER, \
+        MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH, \
         TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
 
     - name: Update ctsms_base_uri in EcrfExporter settings
