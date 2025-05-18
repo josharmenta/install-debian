@@ -183,7 +183,7 @@
 
   - name: Set permissions on webapps directory
     ansible.builtin.file:
-      path: /var/lib/tomcat9/webapps
+      path: /opt/tomcat9/webapps
       mode: '0775'
 
   - name: Set JAVA_OPTS in /etc/default/tomcat9
