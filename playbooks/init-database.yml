@@ -102,26 +102,26 @@
     - name: create user 'phoenix'
       shell: sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department -dp "{{ department_password }}" -u "phoenix" -p "{{ user_password }}" -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
 
-- name: create all language-specific signup users
-  hosts: all
-  tasks:
-    - name: Create language-based users
-      shell: sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department -dp "{{ department_password }}" -u "my_department_signup_{{ item }}" -p "my_department_signup_{{ item }}" -ul {{ item }} -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
-      loop:
-        - de
-        - en
-        - da
-        - es
-        - fi
-        - fr
-        - hu
-        - it
-        - ja
-        - ko
-        - nl
-        - pt
-        - ro
-        - sk
+    - name: create all language-specific signup users
+      hosts: all
+      tasks:
+        - name: Create language-based users
+          shell: sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department -dp "{{ department_password }}" -u "my_department_signup_{{ item }}" -p "my_department_signup_{{ item }}" -ul {{ item }} -pp "INVENTORY_VIEW_USER_DEPARTMENT,STAFF_DETAIL_IDENTITY,COURSE_VIEW_USER_DEPARTMENT,TRIAL_SIGNUP,PROBAND_SIGNUP,USER_ACTIVE_USER,INPUT_FIELD_VIEW,MASS_MAIL_SIGNUP,INVENTORY_NO_SEARCH,STAFF_NO_SEARCH,COURSE_NO_SEARCH,TRIAL_NO_SEARCH,PROBAND_NO_SEARCH,USER_NO_SEARCH,INPUT_FIELD_NO_SEARCH,MASS_MAIL_NO_SEARCH"
+          loop:
+            - de
+            - en
+            - da
+            - es
+            - fi
+            - fr
+            - hu
+            - it
+            - ja
+            - ko
+            - nl
+            - pt
+            - ro
+            - sk
 
     - name: Update ctsms_base_uri in EcrfExporter settings
       ansible.builtin.lineinfile:
