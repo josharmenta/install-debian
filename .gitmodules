@@ -1,6 +1,0 @@
-[submodule "master-data"]
-	path = master-data
-	url = https://github.com/phoenixctms/master-data/
-[submodule "config-default"]
-	path = config-default
-	url = https://github.com/josharmenta/config-default
