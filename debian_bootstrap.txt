@@ -1,4 +1,4 @@
-sudo apt-get -y install wget ca-certificates
-sudo wget https://raw.githubusercontent.com/phoenixctms/install-debian/master/phoenix_install -O ~/phoenix_install
-sudo chmod 755 ~/phoenix_install
-echo '[ -f ~/phoenix_install ] && ~/phoenix_install' >>~/.bashrc
+sudo apt-get -y install ansible git
+git clone https://github.com/phoenixctms/install-debian.git
+cd ~/install-debian
+ansible-playbook install.yml -K

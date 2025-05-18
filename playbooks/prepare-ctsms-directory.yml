@@ -34,37 +34,37 @@
 
     - name: Template ctsms-applicationcontext.properties to /ctsms/config-default/ctsms-applicationcontext.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-applicationcontext.properties
+        src: ../templates/properties/ctsms-applicationcontext.properties.j2
         dest: /ctsms/config-default/ctsms-applicationcontext.properties
       notify: Reload Apache
 
     - name: Template ctsms-cv-pdf-settings.properties to /ctsms/config-default/ctsms-cv-pdf-settings.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-cv-pdf-settings.properties
+        src: ../templates/properties/ctsms-cv-pdf-settings.properties.j2
         dest: /ctsms/config-default/ctsms-cv-pdf-settings.properties
       notify: Reload Apache
 
     - name: Template ctsms-dbtool.properties to /ctsms/config-default/ctsms-dbtool.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-dbtool.properties
+        src: ../templates/properties/ctsms-dbtool.properties.j2
         dest: /ctsms/config-default/ctsms-dbtool.properties
       notify: Reload Apache
 
     - name: Template ctsms-departments.properties to /ctsms/config-default/ctsms-departments.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-departments.properties
+        src: ../templates/properties/ctsms-departments.properties.j2
         dest: /ctsms/config-default/ctsms-departments.properties
       notify: Reload Apache
 
     - name: Template ctsms-departments_de.properties to /ctsms/config-default/ctsms-departments_de.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-departments_de.properties
+        src: ../templates/properties/ctsms-departments_de.properties.j2
         dest: /ctsms/config-default/ctsms-departments_de.properties
       notify: Reload Apache
 
     - name: Template ctsms-visitschedule-excel-settings.properties to /ctsms/config-default/ctsms-visitschedule-excel-settings.properties
       ansible.builtin.template:
-        src: ../templates/properties/ctsms-visitschedule-excel-settings.properties
+        src: ../templates/properties/ctsms-visitschedule-excel-settings.properties.j2
         dest: /ctsms/config-default/ctsms-visitschedule-excel-settings.properties
       notify: Reload Apache
 
