@@ -32,6 +32,42 @@
         repo: 'https://github.com/phoenixctms/config-default.git'
         dest: /ctsms/config-default
 
+    - name: Template ctsms-applicationcontext.properties to /ctsms/config-default/ctsms-applicationcontext.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-applicationcontext.properties
+        dest: /ctsms/config-default/ctsms-applicationcontext.properties
+      notify: Reload Apache
+
+    - name: Template ctsms-cv-pdf-settings.properties to /ctsms/config-default/ctsms-cv-pdf-settings.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-cv-pdf-settings.properties
+        dest: /ctsms/config-default/ctsms-cv-pdf-settings.properties
+      notify: Reload Apache
+
+    - name: Template ctsms-dbtool.properties to /ctsms/config-default/ctsms-dbtool.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-dbtool.properties
+        dest: /ctsms/config-default/ctsms-dbtool.properties
+      notify: Reload Apache
+
+    - name: Template ctsms-departments.properties to /ctsms/config-default/ctsms-departments.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-departments.properties
+        dest: /ctsms/config-default/ctsms-departments.properties
+      notify: Reload Apache
+
+    - name: Template ctsms-departments_de.properties to /ctsms/config-default/ctsms-departments_de.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-departments_de.properties
+        dest: /ctsms/config-default/ctsms-departments_de.properties
+      notify: Reload Apache
+
+    - name: Template ctsms-visitschedule-excel-settings.properties to /ctsms/config-default/ctsms-visitschedule-excel-settings.properties
+      ansible.builtin.template:
+        src: ../templates/properties/ctsms-visitschedule-excel-settings.properties
+        dest: /ctsms/config-default/ctsms-visitschedule-excel-settings.properties
+      notify: Reload Apache
+
     - name: Write dbtool.sh
       ansible.builtin.copy:
         dest: /ctsms/dbtool.sh
