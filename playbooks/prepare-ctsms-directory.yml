@@ -27,12 +27,10 @@
         group: ctsms
         mode: '0755'
 
-    - name: Copy config-default to /ctsms/config-default/
-      ansible.posix.synchronize:
-        src: "{{ playbook_dir }}/../config-default/"
-        dest: /ctsms/config-default/
-        recursive: true
-      delegate_to: "{{ inventory_hostname }}"
+    - name: Clone config-default repository to /ctsms/config-default
+      ansible.builtin.git:
+        repo: 'https://github.com/phoenixctms/config-default.git'
+        dest: /ctsms/config-default
 
     - name: Write dbtool.sh
       ansible.builtin.copy:
@@ -47,12 +45,10 @@
           CATALINA_BASE=${CATALINA_BASE:-/opt/tomcat9}
           java -DCTSMS_PROPERTIES="$CTSMS_PROPERTIES" -DCTSMS_JAVA="$CTSMS_JAVA" -Dfile.encoding=Cp1252 -Djava.awt.headless=true --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED -Xms{{ xms }} -Xmx{{ xmx }} -Xss{{ xss }} -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:ReservedCodeCacheSize={{ perm }} -classpath $CATALINA_BASE/webapps/ROOT/WEB-INF/lib/ctsms-core-1.8.1.jar:$CATALINA_BASE/webapps/ROOT/WEB-INF/lib/* org.phoenixctms.ctsms.executable.DBTool $*
 
-    - name: Copy master-data to /ctsms/master_data/
-      ansible.posix.synchronize:
-        src: "{{ playbook_dir }}/../master-data/"
-        dest: /ctsms/master_data/
-        recursive: true
-      delegate_to: "{{ inventory_hostname }}"
+    - name: Clone master-data repository to /ctsms/master_data
+      ansible.builtin.git:
+        repo: 'https://github.com/phoenixctms/master-data.git'
+        dest: /ctsms/master_data
 
     - name: Recursively change ownership of /ctsms/
       ansible.builtin.file:
