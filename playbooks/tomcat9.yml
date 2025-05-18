@@ -17,16 +17,19 @@
     ansible.builtin.apt:
       name: default-jdk
       state: present
+      notify: Start tomcat9
 
   - name: install libservlet3.1-java
     ansible.builtin.apt:
       name: libservlet3.1-java
       state: present
+      notify: Start tomcat9
 
   - name: Create tomcat group
     group:
       name: tomcat
       state: present
+      notify: Start tomcat9
 
   - name: Create tomcat user
     user:
@@ -36,12 +39,15 @@
       shell: /bin/false
       system: yes
       create_home: no
+      notify: Start tomcat9
 
   - name: Run usermod
     command: usermod --append --groups ctsms tomcat
+    notify: Start tomcat9
 
   - name: Run usermod
     command: usermod --append --groups tomcat,adm ctsms
+    notify: Start tomcat9
 
   - name: Create Tomcat installation directory
     file:
@@ -50,12 +56,14 @@
       owner: tomcat
       group: tomcat
       mode: '0755'
+      notify: Start tomcat9
 
   - name: Download Tomcat 9 archive
     get_url:
       url: "https://dlcdn.apache.org/tomcat/tomcat-9/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
       dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
       mode: '0644'
+      notify: Start tomcat9
 
   - name: Extract Tomcat archive
     unarchive:
@@ -63,6 +71,7 @@
       dest: /opt/tomcat9
       remote_src: yes
       extra_opts: [--strip-components=1]
+      notify: Start tomcat9
 
   - name: Change ownership of Tomcat directories
     file:
@@ -75,18 +84,22 @@
       - temp
       - webapps
       - work
+    notify: Start tomcat9
 
   - name: Set group ownership for the rest of Tomcat files
     file:
       path: /opt/tomcat9
       group: tomcat
       recurse: yes
+      notify: Start tomcat9
 
   - name: Assign read permissions to conf directory
     file:
       path: /opt/tomcat9/conf
       mode: '0750'
       recurse: yes
+      notify: Start tomcat9
+
   - name: Set CATALINA_HOME environment variable
     copy:
       dest: /etc/profile.d/tomcat.sh
@@ -94,6 +107,8 @@
         export CATALINA_HOME="/opt/tomcat9"
         export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
       mode: '0755'
+      notify: Start tomcat9
+
   - name: Create systemd service file for Tomcat
     copy:
       dest: /etc/systemd/system/tomcat.service
@@ -124,33 +139,39 @@
         [Install]
         WantedBy=multi-user.target
       mode: '0644'
+      notify: Start tomcat9
 
   - name: Reload systemd daemon
     systemd:
       daemon_reload: yes
+      notify: Start tomcat9
 
   - name: Enable and start Tomcat service
     systemd:
       name: tomcat
       enabled: yes
       state: started
+      notify: Start tomcat9
 
   - name: Stop service tomcat9, if started
     ansible.builtin.service:
       name: tomcat
       state: stopped
+      notify: Start tomcat9
 
   - name: allow tomcat writing to /ctsms/external_files
     user:
       name: tomcat
       groups: ctsms
       append: yes
+      notify: Start tomcat9
 
   - name: allow ctsms user to load jars from exploded .war
     user:
       name: ctsms
       groups: tomcat,adm
       append: yes
+      notify: Start tomcat9
 
   - name: Template workers.properties to /opt/tomcat9/workers.properties
     ansible.builtin.template:
@@ -159,6 +180,7 @@
       owner: root
       group: tomcat
       mode: '0640'
+      notify: Start tomcat9
 
   - name: Template server.xml to /opt/tomcat9/server.xml
     ansible.builtin.template:
@@ -167,11 +189,14 @@
       owner: root
       group: tomcat
       mode: '0640'
+      notify: Start tomcat9
 
-  - name: Set permissions on /var/log/tomcat9 directory
-    ansible.builtin.file:
-      path: /var/log/tomcat9
+  - name: Ensure /var/log/tomcat9/ directory exists
+    file:
+      path: /var/log/tomcat9/
+      state: directory
       mode: '0770'
+      notify: Start tomcat9
 
   - name: Add group write permission to files in /var/log/tomcat9
     ansible.builtin.file:
@@ -180,11 +205,13 @@
     with_fileglob:
       - /var/log/tomcat9/*
     when: item is file
+    notify: Start tomcat9
 
   - name: Set permissions on webapps directory
     ansible.builtin.file:
       path: /opt/tomcat9/webapps
       mode: '0775'
+      notify: Start tomcat9
 
   - name: Set JAVA_OPTS in /etc/default/tomcat9
     lineinfile:
@@ -193,24 +220,28 @@
       line: 'JAVA_OPTS="-server -Djava.awt.headless=true -Xms{{ XMS }} -Xmx{{ XMX }} -Xss{{ XSS }} -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize={{ PERM }}"'
       create: yes
       backup: yes
+      notify: Start tomcat9
 
   - name: Add CTSMS_PROPERTIES to /etc/default/tomcat9
     lineinfile:
       path: /etc/default/tomcat9
       line: 'CTSMS_PROPERTIES=/ctsms/properties'
       insertafter: EOF
+      notify: Start tomcat9
 
   - name: Add CTSMS_JAVA to /etc/default/tomcat9
     lineinfile:
       path: /etc/default/tomcat9
       line: 'CTSMS_JAVA=/ctsms/java'
       insertafter: EOF
+      notify: Start tomcat9
 
   - name: Ensure tomcat9.service.d directory exists
     file:
       path: /etc/systemd/system/tomcat9.service.d
       state: directory
       mode: '0755'
+      notify: Start tomcat9
 
   - name: Template ctsms.conf to /etc/tomcat9/server.xml
     ansible.builtin.template:
@@ -219,8 +250,10 @@
       owner: root
       group: tomcat
       mode: '0644'
+      notify: Start tomcat9
 
-  - name: Start service tomcat
-    ansible.builtin.service:
-      name: tomcat
-      state: started
+  handlers:
+    - name: Start tomcat9
+      ansible.builtin.service:
+        name: tomcat
+        state: started
