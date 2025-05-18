@@ -168,6 +168,24 @@
       group: tomcat
       mode: '0640'
 
+  - name: Set permissions on /var/log/tomcat9 directory
+    ansible.builtin.file:
+      path: /var/log/tomcat9
+      mode: '0770'
+
+  - name: Add group write permission to files in /var/log/tomcat9
+    ansible.builtin.file:
+      path: "{{ item }}"
+      mode: 'g+w'
+    with_fileglob:
+      - /var/log/tomcat9/*
+    when: item is file
+
+  - name: Set permissions on webapps directory
+    ansible.builtin.file:
+      path: /var/lib/tomcat9/webapps
+      mode: '0775'
+
   - name: Set JAVA_OPTS in /etc/default/tomcat9
     lineinfile:
       path: /etc/default/tomcat9
