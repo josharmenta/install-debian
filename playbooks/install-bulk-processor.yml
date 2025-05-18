@@ -149,7 +149,9 @@
           - --strip-components=1
 
     - name: Run minify.pl on Signup folder
-      ansible.builtin.command: perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
+      ansible.builtin.command: >
+         perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl \
+         --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
 
     - name: Create /ctsms/bulk_processor/output directory
       ansible.builtin.file:

@@ -1,8 +1,5 @@
 - name: Install Apache2
   become: true
-  vars:
-    certificate: "self-signed"
-    organization: "Phoenix CTMS"
   hosts: all
   tasks:
     - name: Install Apache and required modules
