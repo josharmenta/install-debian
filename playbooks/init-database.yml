@@ -22,7 +22,7 @@
 
   tasks:
     - name: Generate environment passwords
-      ansible.builtin.setfact:
+      ansible.builtin.set_fact:
         department_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
         user_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
         cron_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
