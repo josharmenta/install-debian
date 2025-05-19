@@ -18,12 +18,15 @@
     ops_codes_file_revisions: "ops2012syst_claml_20111103"
     asp_substances_file: "/ctsms/master_data/asp_register_20240316.xls"
     asp_substances_file_encoding: "Cp1252"
-    department_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
-    user_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
-    cron_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
     IP: "{{ ansible_default_ipv4.address }}"
 
   tasks:
+    - name: Generate environment passwords
+      ansible.builtin.setfact:
+        department_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
+        user_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
+        cron_password: "{{ lookup('password', '/dev/null length=3 chars=ascii_letters') }}"
+
     - name: initialize db by inserting required setup records
       shell: sudo -u ctsms /ctsms/dbtool.sh -i -f
 
