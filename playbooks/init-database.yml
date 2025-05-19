@@ -156,6 +156,10 @@
         cmd: perl process.pl --task=create_criteria --force --skip-errors
         chdir: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/Criteria
 
+    - name: Installation complete
+      ansible.builtin.debug:
+        msg: "Installation complete"
+
     - name: Print department passphrase
       ansible.builtin.debug:
         msg: "The department passphrase for 'my_department' when adding users with sudo -u ctsms /ctsms/dbtool.sh is {{ department_password }}."
