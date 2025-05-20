@@ -1,4 +1,4 @@
-/ctsms- name: Prepare CTMS directory
+- name: Prepare CTMS directory
   gather_facts: true
   hosts: all
   become: true
