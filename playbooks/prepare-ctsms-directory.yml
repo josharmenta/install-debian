@@ -30,7 +30,7 @@
     - name: Clone config-default repository to "/ctsms/config-default"
       ansible.builtin.git:
         repo: 'https://github.com/phoenixctms/config-default.git'
-        dest: "/ctsms/config-default"
+        dest: "/ctsms/config-default/"
 
     - name: Move contents of /ctsms/config-default to /foo
       command: mv /ctsms/config-default/* /ctsms/
@@ -39,7 +39,7 @@
 
     - name: Remove /config/default directory
       file:
-        path: /config/default
+        path: /ctsms/config-default
         state: absent
 
     - name: Template ctsms-applicationcontext.properties to "/ctsms/properties/ctsms-applicationcontext.properties
