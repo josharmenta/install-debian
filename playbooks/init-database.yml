@@ -123,33 +123,35 @@
         - ro
         - sk
 
-    - name: Update ctsms_base_uri in EcrfExporter settings
-      ansible.builtin.lineinfile:
-        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfExporter/settings.yml
-        regexp: '^ctsms_base_uri:.*'
-        line: "ctsms_base_uri: 'https://{{ IP }}'"
-        backrefs: yes
+    - name: create user 'cron'
+      shell: sudo -u ctsms /ctsms/dbtool.sh -cu -dlk my_department -dp "{{ department_password }}" -u "my_department_cron" -p "{{ cron_password }}" -pp "INVENTORY_MASTER_ALL_DEPARTMENTS,STAFF_MASTER_ALL_DEPARTMENTS,COURSE_MASTER_ALL_DEPARTMENTS,TRIAL_MASTER_ALL_DEPARTMENTS,PROBAND_MASTER_ALL_DEPARTMENTS,USER_ALL_DEPARTMENTS,INPUT_FIELD_MASTER,MASS_MAIL_MASTER_ALL_DEPARTMENTS,INVENTORY_MASTER_SEARCH,STAFF_MASTER_SEARCH,COURSE_MASTER_SEARCH,TRIAL_MASTER_SEARCH,PROBAND_MASTER_SEARCH,USER_MASTER_SEARCH,INPUT_FIELD_MASTER_SEARCH,MASS_MAIL_MASTER_SEARCH"
 
-    - name: Update ctsms_base_uri in EcrfImporter settings
-      ansible.builtin.lineinfile:
-        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfImporter/settings.yml
-        regexp: '^ctsms_base_uri:.*'
-        line: "ctsms_base_uri: 'https://{{ IP }}'"
-        backrefs: yes
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsmsrestapi_password.*|ctsmsrestapi_password = {{ cron_password }}|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/Criteria/config.cfg
 
-    - name: Update ctsms_base_uri in InquiryExporter settings
-      ansible.builtin.lineinfile:
-        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/InquiryExporter/settings.yml
-        regexp: '^ctsms_base_uri:.*'
-        line: "ctsms_base_uri: 'https://{{ IP }}'"
-        backrefs: yes
+    - name: Update Duplicates config.cfg
+      shell: sed -r -i "s|ctsmsrestapi_password.*|ctsmsrestapi_password = {{ cron_password }}|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/Duplicates/config.cfg
 
-    - name: Update ctsms_base_uri in Signup settings
-      ansible.builtin.lineinfile:
-        path: /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup/settings.yml
-        regexp: '^ctsms_base_uri:.*'
-        line: "ctsms_base_uri: 'https://{{ IP }}'"
-        backrefs: yes
+    - name: Update EcrfExporter config.cfg
+      shell: sed -r -i "s|ctsmsrestapi_password.*|ctsmsrestapi_password = {{ cron_password }}|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfExporter/config.cfg
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsmsrestapi_password.*|ctsmsrestapi_password = {{ cron_password }}|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfImporter/config.cfg
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsmsrestapi_password.*|ctsmsrestapi_password = {{ cron_password }}|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/InquiryExporter/config.cfg
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfExporter/settings.yml
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfImporter/settings.yml
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/InquiryExporter/settings.yml
+
+    - name: Update Criteria config.cfg
+      shell: sed -r -i "s|ctsms_base_uri.*|ctsms_base_uri: 'https://${IP}'|" /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup/settings.yml
 
     - name: Run default criteria creation
       ansible.builtin.command:
