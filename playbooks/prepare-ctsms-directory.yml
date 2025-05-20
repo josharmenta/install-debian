@@ -27,7 +27,7 @@
         group: ctsms
         mode: '0755'
 
-    - name: Clone config-default repository to "{{ config_directory }}"
+    - name: Clone config-default repository to "/ctsms/config-default"
       ansible.builtin.git:
         repo: 'https://github.com/phoenixctms/config-default.git'
         dest: "/ctsms/config-default"
