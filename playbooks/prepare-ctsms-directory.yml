@@ -3,10 +3,15 @@
   hosts: all
   become: true
   vars:
+    tag: "1.8.1"  # Replace with your actual tag or pass in as extra var
     xms: "2048m"
     xmx: "4096m"
     xss: "512k"
     perm: "256m"
+    dest_dir: "/ctsms"
+    archive_path: "/ctsms/config.tar.gz"
+    download_url: "https://github.com/phoenixctms/config-default/archive/{{ tag }}.tar.gz"
+
   tasks:
     - name: Create /ctsms
       ansible.builtin.file:
@@ -27,19 +32,26 @@
         group: ctsms
         mode: '0755'
 
-    - name: Clone config-default repository to "/ctsms/config-default"
-      ansible.builtin.git:
-        repo: 'https://github.com/phoenixctms/config-default.git'
-        dest: "/ctsms/config-default/"
+    - name: Download config tarball
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ archive_path }}"
+        validate_certs: no
+        headers:
+          Accept: "application/octet-stream"
+        force: yes
 
-    - name: Move contents of /ctsms/config-default to /foo
-      command: mv /ctsms/config-default/* /ctsms/
-      args:
-        removes: /ctsms/config-default/*
+    - name: Extract config tarball
+      unarchive:
+        src: "{{ archive_path }}"
+        dest: "{{ dest_dir }}"
+        remote_src: yes
+        extra_opts:
+          - "--strip-components=1"
 
-    - name: Remove /config/default directory
+    - name: Remove config tarball
       file:
-        path: /ctsms/config-default
+        path: "{{ archive_path }}"
         state: absent
 
     - name: Template ctsms-applicationcontext.properties to "/ctsms/properties/ctsms-applicationcontext.properties
